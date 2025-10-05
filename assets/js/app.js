@@ -38,6 +38,34 @@ const STATE = {
   timelineTimer: null
 };
 
+
+const OBJECTIVE_META = {
+  cycleDays: { label: '融资周期', format: 'days', category: 'efficiency' },
+  firstReview24h: { label: '24 小时内初审占比', format: 'percent', category: 'efficiency' },
+  riskPreCheckHours: { label: '风险初判时长', format: 'hours', category: 'risk' },
+  badDebt: { label: '坏账率', format: 'percent', category: 'risk' },
+  compositeCost: { label: '综合融资成本', format: 'percent', category: 'cost' },
+  materialCostSaving: { label: '材料成本节省率', format: 'percent', category: 'cost', defaultBefore: 0 },
+  tPlusOneCoverage: { label: 'T+1 放款覆盖率', format: 'percent', category: 'efficiency' },
+  crossBorderCycleDays: { label: '跨境融资周期', format: 'days', category: 'efficiency' },
+  fraudDetectAccuracy: { label: '虚假贸易识别准确率', format: 'percent', category: 'risk' },
+  riskAlertResponseHours: { label: '风险预警响应时间', format: 'hours', category: 'risk' },
+  redundantRemovalRate: { label: '冗余环节消除率', format: 'percent', category: 'cost' },
+  rateDiscountCoverage: { label: '利率优惠覆盖率', format: 'percent', category: 'cost' }
+};
+
+const OBJECTIVE_GROUPS = {
+  efficiency: ['cycleDays', 'firstReview24h', 'tPlusOneCoverage', 'crossBorderCycleDays'],
+  risk: ['riskPreCheckHours', 'badDebt', 'fraudDetectAccuracy', 'riskAlertResponseHours'],
+  cost: ['compositeCost', 'materialCostSaving', 'redundantRemovalRate', 'rateDiscountCoverage']
+};
+
+const OBJECTIVE_CATEGORY_LABELS = {
+  efficiency: '效率指标',
+  risk: '风险指标',
+  cost: '成本指标'
+};
+
 function createElement(tag, options = {}) {
   const el = document.createElement(tag);
   if (options.className) el.className = options.className;
@@ -79,6 +107,51 @@ function sum(values) {
 
 function average(values) {
   return values.length ? sum(values) / values.length : 0;
+}
+
+
+function formatMonth(monthStr) {
+  if (!monthStr || typeof monthStr !== 'string') return '';
+  const parts = monthStr.split('-');
+  if (parts.length < 2) return monthStr;
+  const [year, month] = parts;
+  return `${year}年${String(month).padStart(2, '0')}月`;
+}
+
+function formatMetricValue(value, format, unit = '') {
+  if (value === undefined || value === null) return '--';
+  switch (format) {
+    case 'days':
+      return `${formatNumber(value, { digits: 0 })} 天`;
+    case 'hours':
+      return `${formatNumber(value, { digits: 0 })} 小时`;
+    case 'percent':
+      return formatPercent(value, Math.abs(value) < 0.1 ? 1 : 0);
+    case 'ratio':
+      return formatPercent(value, 0);
+    case 'currency-wanyuan':
+      return `${formatNumber(value, { digits: 0 })} 万元`;
+    case 'integer':
+      return formatNumber(value, { digits: 0 });
+    default: {
+      if (typeof value === 'number') {
+        if (!unit && Math.abs(value) <= 1) {
+          return formatPercent(value, Math.abs(value) < 0.1 ? 1 : 0);
+        }
+        const digits = Number.isInteger(value) ? 0 : 1;
+        return `${formatNumber(value, { digits })}${unit ? ` ${unit}` : ''}`;
+      }
+      return `${value}`;
+    }
+  }
+}
+
+function normalizeChange(entry, meta = {}) {
+  if (entry && typeof entry === 'object' && 'before' in entry && 'after' in entry) {
+    return { before: entry.before, after: entry.after };
+  }
+  const defaultBefore = meta.defaultBefore !== undefined ? meta.defaultBefore : 0;
+  return { before: defaultBefore, after: entry };
 }
 
 const Toast = (() => {
@@ -374,12 +447,14 @@ const TimelinePlayer = (() => {
 
 const ScoreLimitCalculator = (() => {
   let container;
-  let chartId = 'chart-calculator';
-  const inputs = {};
+  const chartId = 'chart-calculator';
+  const sliderInputs = {};
   let summaryBox;
+  let s4Notice;
+  let s4State = { bucket: null, addons: new Set() };
 
   const CREDIT_MAP = [
-    { min: 90, value: 1.2, label: '信用优秀' },
+    { min: 90, value: 1.2, label: '信用极佳' },
     { min: 80, value: 1.0, label: '信用良好' },
     { min: 70, value: 0.8, label: '信用稳健' },
     { min: 60, value: 0.5, label: '需重点关注' }
@@ -397,11 +472,14 @@ const ScoreLimitCalculator = (() => {
     return wrapper;
   }
 
-  function createNumberInput(id, label, value, step) {
+  function createNumberInput(id, label, value, step, unitLabel) {
     const wrapper = createElement('label', { className: 'calc-control' });
     wrapper.innerHTML = `
       <span>${label}</span>
-      <input type="number" id="${id}" value="${value}" step="${step}" aria-label="${label}" />
+      <div class="calc-input">
+        <input type="number" id="${id}" value="${value}" step="${step}" aria-label="${label}" />
+        <span class="calc-unit">${unitLabel || ''}</span>
+      </div>
     `;
     return wrapper;
   }
@@ -416,18 +494,61 @@ const ScoreLimitCalculator = (() => {
     return match ? match.label : '拒贷';
   }
 
-  function getIndustryCoefficient(industry, rules) {
-    const kFactors = (rules && rules.limitModel && rules.limitModel.kFactors) ? rules.limitModel.kFactors : {};
+  function getIndustryCoefficient(industry, technology) {
+    const kFactors = technology.limitModel?.kFactors || {};
     const value = kFactors[industry];
     return typeof value === 'number' ? value : 0.2;
   }
 
-  function calculate(values, rules) {
-    // S 分计算：S = 0.3×S1 + 0.4×S2 + 0.2×S3 + 0.1×S4
+  function calcS4(technology) {
+    const config = technology.scoreModel?.S4;
+    if (!config) return { score: 0, truncated: false, appliedAddon: 0 };
+    const buckets = config.prosperity?.buckets || [];
+    const policy = config.policySupport || { base: 0, addons: [], addonsCap: 0, cap: 0 };
+    let bucket = buckets.find((item) => item.key === s4State.bucket);
+    if (!bucket) {
+      bucket = buckets[0] || { score: 0 };
+      s4State.bucket = bucket?.key || null;
+    }
+    const addonMap = new Map((policy.addons || []).map((addon) => [addon.key, addon.score]));
+    let addonTotal = 0;
+    s4State.addons.forEach((key) => {
+      if (addonMap.has(key)) {
+        addonTotal += addonMap.get(key);
+      }
+    });
+    const cappedAddon = Math.min(addonTotal, policy.addonsCap || 0);
+    const policyScore = Math.min(policy.base + cappedAddon, policy.cap || (policy.base + cappedAddon));
+    const truncated = addonTotal > cappedAddon || policyScore > policy.cap;
+    return {
+      score: (bucket.score || 0) + (policyScore || 0),
+      truncated,
+      bucket,
+      addonTotal,
+      cappedAddon,
+      policyScore
+    };
+  }
+
+  function collectValues(defaults, technology) {
+    const values = {
+      S1: Number(sliderInputs.S1.value),
+      S2: Number(sliderInputs.S2.value),
+      S3: Number(sliderInputs.S3.value),
+      revenue: Number(inputs.revenue.value || defaults.revenue),
+      outstanding: Number(inputs.outstanding.value || defaults.outstanding),
+      industry: inputs.industry.value
+    };
+    const s4Result = calcS4(technology);
+    values.S4 = Number(s4Result.score.toFixed(1));
+    values._s4Result = s4Result;
+    return values;
+  }
+
+  function calculate(values, technology) {
     const score = Number(((values.S1 * 0.3) + (values.S2 * 0.4) + (values.S3 * 0.2) + (values.S4 * 0.1)).toFixed(1));
     const creditCoeff = getCreditCoefficient(score);
-    const industryCoeff = getIndustryCoefficient(values.industry, rules);
-    // L 额度计算：L = R × K × C − D
+    const industryCoeff = getIndustryCoefficient(values.industry, technology);
     const limit = Math.max(0, values.revenue * industryCoeff * creditCoeff - values.outstanding);
     return {
       score,
@@ -438,23 +559,11 @@ const ScoreLimitCalculator = (() => {
     };
   }
 
-  function collectValues(defaults) {
-    return {
-      S1: Number(inputs.S1.value),
-      S2: Number(inputs.S2.value),
-      S3: Number(inputs.S3.value),
-      S4: Number(inputs.S4.value),
-      revenue: Number(inputs.revenue.value || defaults.revenue),
-      outstanding: Number(inputs.outstanding.value || defaults.outstanding),
-      industry: inputs.industry.value
-    };
-  }
-
-  function renderChart(values, result) {
+  function renderChart(values, technology, result) {
     const seriesData = [];
     for (let s = 60; s <= 100; s += 5) {
       const creditCoeff = getCreditCoefficient(s);
-      const limit = Math.max(0, values.revenue * result.industryCoeff * creditCoeff - values.outstanding);
+      const limit = Math.max(0, values.revenue * getIndustryCoefficient(values.industry, technology) * creditCoeff - values.outstanding);
       seriesData.push([s, Number(limit.toFixed(2))]);
     }
     const option = {
@@ -504,57 +613,143 @@ const ScoreLimitCalculator = (() => {
     ChartManager.initChart(chartId, option);
   }
 
-  function update(defaults, rules) {
-    const values = collectValues(defaults);
-    const result = calculate(values, rules);
+  const inputs = {};
+
+  function update(defaults, technology) {
+    const values = collectValues(defaults, technology);
+    const result = calculate(values, technology);
+    const s4Result = values._s4Result;
     summaryBox.innerHTML = `
-      <p>评分 S：<strong>${result.score}</strong> (${result.creditLabel})</p>
+      <p>综合评分 S：<strong>${result.score}</strong> (${result.creditLabel})</p>
+      <p>S4 行业适配得分：<strong>${formatNumber(s4Result.score, { digits: 1 })}</strong>${s4Result.truncated ? ' <span class="calc-hint">加分封顶，超出部分未计分</span>' : ''}</p>
       <p>行业系数 K：<strong>${result.industryCoeff.toFixed(2)}</strong></p>
       <p>信用系数 C：<strong>${result.creditCoeff.toFixed(2)}</strong></p>
       <p>可贷额度 L：<strong>${formatNumber(result.limit, { digits: 0 })} 万元</strong></p>
     `;
     summaryBox.className = `calc-summary ${result.creditCoeff > 0 ? 'approved' : 'rejected'}`;
-    renderChart(values, result);
+    if (s4Notice) {
+      s4Notice.textContent = s4Result.truncated ? '政策加分已达到上限，超出部分未计分。' : '';
+    }
+    renderChart(values, technology, result);
   }
 
-  function bindEvents(defaults, rules) {
-    ['S1', 'S2', 'S3', 'S4'].forEach((key) => {
-      const range = inputs[key];
+  function bindEvents(defaults, technology) {
+    ['S1', 'S2', 'S3'].forEach((key) => {
+      const range = sliderInputs[key];
       const output = document.getElementById(`${key}-output`);
       range.addEventListener('input', () => {
         output.textContent = range.value;
-        update(defaults, rules);
+        update(defaults, technology);
       });
     });
     ['revenue', 'outstanding'].forEach((key) => {
-      inputs[key].addEventListener('change', () => update(defaults, rules));
+      inputs[key].addEventListener('change', () => update(defaults, technology));
     });
-    inputs.industry.addEventListener('change', () => update(defaults, rules));
+    inputs.industry.addEventListener('change', () => update(defaults, technology));
+    (inputs.s4Radios || []).forEach((radio) => {
+      radio.addEventListener('change', () => {
+        if (radio.checked) {
+          s4State.bucket = radio.value;
+          update(defaults, technology);
+        }
+      });
+    });
+    (inputs.s4Addons || []).forEach((checkbox) => {
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          s4State.addons.add(checkbox.value);
+        } else {
+          s4State.addons.delete(checkbox.value);
+        }
+        update(defaults, technology);
+      });
+    });
   }
 
-  function init(target, defaults, rules) {
+  function renderS4Controls(form, defaults, technology) {
+    const config = technology.scoreModel?.S4;
+    if (!config) return;
+    const section = createElement('div', { className: 'calc-s4-section' });
+    section.appendChild(createElement('h4', { text: 'S4 行业适配分' }));
+
+    const prosperityWrap = createElement('div', { className: 'calc-control' });
+    prosperityWrap.appendChild(createElement('span', { text: '行业景气度分档' }));
+    const radioGroup = createElement('div', { className: 'calc-radio-group' });
+    const radios = [];
+    (config.prosperity?.buckets || []).forEach((bucket) => {
+      const id = `s4-bucket-${bucket.key}`;
+      const label = createElement('label', { className: 'calc-radio' });
+      label.innerHTML = `<input type="radio" name="s4-prosperity" id="${id}" value="${bucket.key}"> <span>${bucket.label}</span>`;
+      radioGroup.appendChild(label);
+      const input = label.querySelector('input');
+      radios.push(input);
+      if (defaults.prosperityBucket === bucket.key) {
+        input.checked = true;
+        s4State.bucket = bucket.key;
+      }
+    });
+    if (!s4State.bucket && radios.length) {
+      radios[0].checked = true;
+      s4State.bucket = radios[0].value;
+    }
+    prosperityWrap.appendChild(radioGroup);
+    section.appendChild(prosperityWrap);
+
+    const policy = config.policySupport || { base: 0, addons: [], addonsCap: 0 };
+    const addonWrap = createElement('div', { className: 'calc-control' });
+    addonWrap.appendChild(createElement('span', { text: `政策扶持加分（基础 ${policy.base} 分，加分上限 ${policy.addonsCap} 分）` }));
+    const addonGroup = createElement('div', { className: 'calc-checkbox-group' });
+    const checkboxes = [];
+    (policy.addons || []).forEach((addon) => {
+      const id = `s4-addon-${addon.key}`;
+      const label = createElement('label', { className: 'calc-checkbox' });
+      label.innerHTML = `<input type="checkbox" id="${id}" value="${addon.key}"> <span>${addon.label}（${addon.score} 分）</span>`;
+      addonGroup.appendChild(label);
+      const input = label.querySelector('input');
+      if ((defaults.policyAddons || []).includes(addon.key)) {
+        input.checked = true;
+        s4State.addons.add(addon.key);
+      }
+      checkboxes.push(input);
+    });
+    addonWrap.appendChild(addonGroup);
+    section.appendChild(addonWrap);
+
+    s4Notice = createElement('p', { className: 'calc-hint', text: '' });
+    section.appendChild(s4Notice);
+
+    form.appendChild(section);
+    inputs.s4Radios = radios;
+    inputs.s4Addons = checkboxes;
+  }
+
+  function init(target, defaults, technology) {
     container = target;
     container.innerHTML = '';
-    const wrapper = createElement('section', { className: 'glass-card' });
+    s4State = { bucket: defaults.prosperityBucket || null, addons: new Set(defaults.policyAddons || []) };;
+    const wrapper = createElement('section', { className: 'glass-card calc-card' });
     const header = createElement('header', { className: 'calc-header' });
     header.innerHTML = `<h3>${I18N.zh.calculatorTitle}</h3><p>${I18N.zh.calculatorDesc}</p>`;
 
     const form = createElement('div', { className: 'calc-grid' });
-    ['S1', 'S2', 'S3', 'S4'].forEach((key, idx) => {
-      const label = rules.scoreModel.dimensions[idx].name;
+    ['S1', 'S2', 'S3'].forEach((key, idx) => {
+      const label = technology.scoreModel.dimensions[idx].name;
       const slider = createSlider(key, `${label} (S${idx + 1})`, defaults[key]);
       form.appendChild(slider);
+      sliderInputs[key] = slider.querySelector('input');
     });
 
-    const revenueInput = createNumberInput('revenue', '年度营收 R (万元)', defaults.revenue, 1000);
-    const outstandingInput = createNumberInput('outstanding', '未结清余额 D (万元)', defaults.outstanding, 100);
+    const revenueInput = createNumberInput('revenue', '年度营收 R', defaults.revenue, 1000, '万元');
+    const outstandingInput = createNumberInput('outstanding', '未结清余额 D', defaults.outstanding, 100, '万元');
     const industrySelect = createElement('label', { className: 'calc-control' });
-    const options = Object.keys(rules.limitModel.kFactors)
+    const options = Object.keys(technology.limitModel.kFactors || {})
       .map((key) => `<option value="${key}" ${key === defaults.industry ? 'selected' : ''}>${key.toUpperCase()}</option>`)
       .join('');
     industrySelect.innerHTML = `<span>行业系数 K</span><select id="industry" aria-label="行业系数">${options}</select>`;
 
     form.append(revenueInput, outstandingInput, industrySelect);
+    renderS4Controls(form, defaults, technology);
+
     wrapper.append(header, form);
 
     const chartCard = createElement('div', { className: 'chart-card' });
@@ -574,31 +769,31 @@ const ScoreLimitCalculator = (() => {
 
     container.appendChild(wrapper);
 
-    inputs.S1 = wrapper.querySelector('#S1');
-    inputs.S2 = wrapper.querySelector('#S2');
-    inputs.S3 = wrapper.querySelector('#S3');
-    inputs.S4 = wrapper.querySelector('#S4');
-    inputs.revenue = wrapper.querySelector('#revenue');
-    inputs.outstanding = wrapper.querySelector('#outstanding');
-    inputs.industry = wrapper.querySelector('#industry');
+    inputs.revenue = revenueInput.querySelector('input');
+    inputs.outstanding = outstandingInput.querySelector('input');
+    inputs.industry = industrySelect.querySelector('select');
 
     ChartManager.registerDownloadButton(chartId, downloadBtn);
-    bindEvents(defaults, rules);
-    update(defaults, rules);
+    bindEvents(defaults, technology);
+    update(defaults, technology);
   }
 
   return { init };
 })();
 
+
 const UIBuilder = (() => {
   function renderMeta(meta) {
-    document.getElementById('app-title').textContent = `${meta.titleZh}`;
-    document.getElementById('app-subtitle').textContent = `${meta.titleEn}｜${meta.scenario}`;
-    document.getElementById('app-slogan').textContent = meta.slogan;
-    document.getElementById('app-school').textContent = `团队：${meta.team.join('、')}｜学校：${meta.school}`;
-    document.getElementById('app-timestamp').textContent = `数据更新：${meta.timestamp}`;
-    document.getElementById('print-export').textContent = meta.printButtonText;
-  }
+  document.getElementById('app-title').textContent = meta.titleZh || '';
+  document.getElementById('app-subtitle').textContent = `${meta.titleEn || ''}｜${meta.scenario || ''}`;
+  document.getElementById('app-slogan').textContent = meta.slogan || '';
+  const teamList = Array.isArray(meta.team) ? meta.team.join('、') : '';
+  document.getElementById('app-school').textContent = `团队：${teamList}｜学校：${meta.school || ''}`;
+  const timestamp = meta.timestamp ? `数据更新：${formatMonth(meta.timestamp)}` : '';
+  document.getElementById('app-timestamp').textContent = timestamp;
+  document.getElementById('print-export').textContent = meta.printButtonText || '导出为 PDF（打印样式）';
+}
+
 
   function renderCTA(buttons) {
     const wrap = document.getElementById('cta-buttons');
@@ -641,70 +836,74 @@ const UIBuilder = (() => {
   }
 
   function renderOverview(overview, assets) {
-    const panel = document.getElementById('panel-overview');
-    panel.innerHTML = '';
-    const grid = createElement('div', { className: 'section-grid' });
-    const template = document.getElementById('kpi-card-template');
-    overview.kpiFlip.forEach((kpi) => {
-      const card = template.content.firstElementChild.cloneNode(true);
-      const front = card.querySelector('.flip-front');
-      const back = card.querySelector('.flip-back');
-      front.innerHTML = `
-        <h3>${kpi.label}</h3>
-        <p class="metric-caption">${kpi.description}</p>
-        <p class="key-metric">${kpi.unit ? `${kpi.current}${kpi.unit}` : formatNumber(kpi.current, { digits: kpi.current < 1 ? 2 : 0 })}</p>
-      `;
-      back.innerHTML = `
-        <p>${I18N.zh.baseline}：${kpi.unit ? `${kpi.baseline}${kpi.unit}` : formatNumber(kpi.baseline, { digits: kpi.baseline < 1 ? 2 : 0 })}</p>
-        ${kpi.target !== undefined ? `<p>${I18N.zh.target}：${kpi.unit ? `${kpi.target}${kpi.unit}` : formatNumber(kpi.target, { digits: kpi.target < 1 ? 2 : 0 })}</p>` : ''}
-        ${kpi.improvement !== undefined ? `<p>${I18N.zh.percentage}：${formatPercent(kpi.improvement)}</p>` : ''}
-      `;
-      grid.appendChild(card);
-    });
-    panel.appendChild(grid);
+  const panel = document.getElementById('panel-overview');
+  panel.innerHTML = '';
+  const grid = createElement('div', { className: 'section-grid kpi-grid' });
+  const template = document.getElementById('kpi-card-template');
+  (overview.kpiCards || []).forEach((kpi) => {
+    const card = template.content.firstElementChild.cloneNode(true);
+    const front = card.querySelector('.flip-front');
+    const back = card.querySelector('.flip-back');
+    const format = kpi.format || (kpi.unit && kpi.unit.includes('工作日') ? 'days' : '');
+    const { before, after } = normalizeChange(kpi.change || {}, kpi);
+    const beforeText = formatMetricValue(before, format, kpi.unit);
+    const afterText = formatMetricValue(after, format, kpi.unit);
+    front.innerHTML = `
+      <h3>${kpi.label}</h3>
+      <p class="metric-caption">${kpi.description || ''}</p>
+      <p class="key-metric">${afterText}</p>
+    `;
+    back.innerHTML = `
+      <p>${I18N.zh.baseline}：${beforeText}</p>
+      <p>${I18N.zh.target}：${afterText}</p>
+    `;
+    grid.appendChild(card);
+  });
+  panel.appendChild(grid);
 
-    const chartContainer = createChartCard(panel, {
-      id: 'chart-kpi-overview',
-      title: '融资周期对比',
-      subtitle: '传统 vs 双链模式季度表现'
+  if (typeof overview.microCoverageTarget === 'number') {
+    const microNote = createElement('p', {
+      className: 'kpi-micro-note',
+      text: `小微覆盖 ≥${formatPercent(overview.microCoverageTarget, 0)}`
     });
-    const cycleData = assets.financeCycle;
-    ChartManager.initChart('chart-kpi-overview', {
-      backgroundColor: 'transparent',
-      legend: { data: ['传统流程', '双链优化'], textStyle: { color: '#BFD4FF' } },
-      grid: { left: 50, right: 20, top: 50, bottom: 40 },
-      textStyle: { color: '#BFD4FF' },
-      tooltip: { trigger: 'axis' },
-      xAxis: {
-        type: 'category',
-        data: cycleData.map((item) => item.quarter),
-        axisLine: { lineStyle: { color: '#1F6FEB' } }
-      },
-      yAxis: {
-        type: 'value',
-        name: '工作日',
-        axisLine: { lineStyle: { color: '#1F6FEB' } },
-        splitLine: { lineStyle: { color: 'rgba(31,111,235,0.2)' } }
-      },
-      series: [
-        {
-          name: '传统流程',
-          type: 'line',
-          smooth: true,
-          data: cycleData.map((item) => item.traditional),
-          lineStyle: { color: '#8BA3C7' }
-        },
-        {
-          name: '双链优化',
-          type: 'line',
-          smooth: true,
-          data: cycleData.map((item) => item.blockchain),
-          lineStyle: { color: '#1FBF9A' },
-          areaStyle: { color: 'rgba(31,191,154,0.25)' }
-        }
-      ]
-    });
+    panel.appendChild(microNote);
   }
+
+  createChartCard(panel, {
+    id: 'chart-kpi-overview',
+    title: '融资周期对比',
+    subtitle: '传统流程 vs 双链融合'
+  });
+  const cycleData = Array.isArray(assets.financeCycle) ? assets.financeCycle : [];
+  ChartManager.initChart('chart-kpi-overview', {
+    backgroundColor: 'transparent',
+    legend: { data: ['传统流程', '双链融合'], textStyle: { color: '#BFD4FF' } },
+    grid: { left: 50, right: 20, top: 50, bottom: 40 },
+    textStyle: { color: '#BFD4FF' },
+    tooltip: { trigger: 'axis' },
+    xAxis: { type: 'category', data: cycleData.map((item) => item.quarter), axisLine: { lineStyle: { color: '#1F6FEB' } } },
+    yAxis: { type: 'value', name: '工作日', axisLine: { lineStyle: { color: '#1F6FEB' } }, splitLine: { lineStyle: { color: 'rgba(31,111,235,0.2)' } } },
+    series: [
+      { name: '传统流程', type: 'line', smooth: true, data: cycleData.map((item) => item.traditional), lineStyle: { color: '#8BA3C7' } },
+      { name: '双链融合', type: 'line', smooth: true, data: cycleData.map((item) => item.dual), lineStyle: { color: '#1FBF9A' }, areaStyle: { color: 'rgba(31,191,154,0.25)' } }
+    ]
+  });
+
+  const flowCard = createElement('section', { className: 'glass-card flow-card' });
+  flowCard.innerHTML = `<h3>${overview.threeFlow.title}</h3><p>${overview.threeFlow.description || ''}</p>`;
+  const flowGrid = createElement('div', { className: 'flow-grid' });
+  (overview.threeFlow.flows || []).forEach((flow) => {
+    const block = createElement('div', { className: 'glass-card flow-item' });
+    block.innerHTML = `<h4>${flow.name}</h4>`;
+    const list = createElement('ul');
+    (flow.highlights || []).forEach((highlight) => list.appendChild(createElement('li', { text: highlight })));
+    block.appendChild(list);
+    flowGrid.appendChild(block);
+  });
+  flowCard.appendChild(flowGrid);
+  panel.appendChild(flowCard);
+}
+
 
   function renderBackground(background, assets) {
     const panel = document.getElementById('panel-background');
@@ -782,214 +981,205 @@ const UIBuilder = (() => {
 
   
   
-  function renderObjectives(objectives, assets) {
-    const panel = document.getElementById('panel-objectives');
-    panel.innerHTML = '';
-    const toggleWrap = createElement('div', { className: 'cta-group' });
-    objectives.phases.forEach((phase) => {
-      const isActive = phase.id === STATE.currentObjectivePhase;
-      const btn = createElement('button', {
-        className: 'btn' + (isActive ? ' active' : ''),
-        text: phase.label,
-        attrs: { type: 'button', 'data-phase': phase.id }
-      });
-      btn.addEventListener('click', () => {
-        STATE.currentObjectivePhase = phase.id;
-        toggleWrap.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        updatePhase();
-      });
-      toggleWrap.appendChild(btn);
+  function renderObjectives(objectives) {
+  const panel = document.getElementById('panel-objectives');
+  panel.innerHTML = '';
+  const toggleWrap = createElement('div', { className: 'cta-group objective-tabs' });
+  ['shortTerm', 'midTerm'].forEach((phaseKey) => {
+    const isActive = phaseKey === STATE.currentObjectivePhase;
+    const btn = createElement('button', {
+      className: 'btn' + (isActive ? ' active' : ''),
+      text: phaseKey === 'shortTerm' ? '短期（落地 1 年）' : '中期（落地 2 年）',
+      attrs: { type: 'button', 'data-phase': phaseKey }
     });
-    panel.appendChild(toggleWrap);
-
-    // 预警与滚动迭代信息区，增大间距与可读性
-    const infoRow = createElement('div', { className: 'section-grid' });
-    const warningBox = createElement('div', { className: 'warning-card', text: objectives.warningRules.message });
-    const rollingWrap = createElement('div', { className: 'glass-card' });
-    const rollingBadge = createElement('span', { className: 'badge badge-rolling', text: objectives.rollingBadge.label });
-    const rollingDesc = createElement('p', { className: 'metric-caption', text: objectives.rollingBadge.description });
-    rollingWrap.append(rollingBadge, rollingDesc);
-    infoRow.append(warningBox, rollingWrap);
-    panel.appendChild(infoRow);
-
-    const metricsWrap = createElement('div', { className: 'section-grid', attrs: { id: 'objective-metrics' } });
-    panel.appendChild(metricsWrap);
-
-    // 两张图并排展示的栅格容器
-    const chartsGrid = createElement('div', { className: 'charts-grid' });
-    panel.appendChild(chartsGrid);
-
-    createChartCard(chartsGrid, {
-      id: 'chart-objective-gauges',
-      title: '效率 / 风险 / 成本 指标对比',
-      subtitle: '以目标完成度展示'
+    btn.addEventListener('click', () => {
+      STATE.currentObjectivePhase = phaseKey;
+      toggleWrap.querySelectorAll('button').forEach((node) => node.classList.remove('active'));
+      btn.classList.add('active');
+      renderObjectives(objectives);
     });
+    toggleWrap.appendChild(btn);
+  });
+  panel.appendChild(toggleWrap);
 
-    createChartCard(chartsGrid, {
-      id: 'chart-cost-compare',
-      title: '成本结构对比',
-      subtitle: '人工审核 / 纸质单据 / 对账沟通 / 资金占压'
-    });
+  const infoRow = createElement('div', { className: 'objective-info-row' });
+  infoRow.appendChild(createElement('div', { className: 'warning-card', text: objectives.warningRules.message }));
+  const badgeCard = createElement('div', { className: 'glass-card badge-card' });
+  badgeCard.append(createElement('span', { className: 'badge badge-rolling', text: objectives.rollingBadge.label }), createElement('p', { className: 'metric-caption', text: objectives.rollingBadge.text }));
+  infoRow.appendChild(badgeCard);
+  panel.appendChild(infoRow);
 
-    // 移除重复的预警与滚动迭代徽章渲染，改为上方 infoRow 统一展示
+  const metricsWrap = createElement('div', { className: 'section-grid objective-metrics' });
+  const phaseData = objectives[STATE.currentObjectivePhase] || {};
+  Object.entries(phaseData).forEach(([key, value]) => {
+    const meta = OBJECTIVE_META[key] || { label: key, format: 'integer', category: 'efficiency' };
+    const { before, after } = normalizeChange(value, meta);
+    const card = createElement('article', { className: 'glass-card objective-card' });
+    const beforeText = formatMetricValue(before, meta.format, meta.unit);
+    const afterText = formatMetricValue(after, meta.format, meta.unit);
+    card.innerHTML = `
+      <h3>${meta.label}</h3>
+      <p class="metric-caption">前：${beforeText}</p>
+      <p class="metric-caption">后：${afterText}</p>
+    `;
+    metricsWrap.appendChild(card);
+  });
+  panel.appendChild(metricsWrap);
 
-    function displayValue(metric, value) {
-      if (value < 1 && (!metric.unit || metric.unit.indexOf('率') !== -1 || metric.unit.indexOf('%') !== -1 || metric.unit.indexOf('比') !== -1)) {
-        return formatPercent(value, 0);
-      }
-      if (metric.unit) {
-        return formatNumber(value, { digits: value % 1 === 0 ? 0 : 2 }) + ' ' + metric.unit;
-      }
-      return formatNumber(value, { digits: value % 1 === 0 ? 0 : 2 });
-    }
+  const chartsGrid = createElement('div', { className: 'charts-grid' });
+  panel.appendChild(chartsGrid);
+  createChartCard(chartsGrid, {
+    id: 'chart-objective-gauges',
+    title: '效率 / 风险 / 成本 指标均值对比',
+    subtitle: '以基准值与目标值对比'
+  });
+  createChartCard(chartsGrid, {
+    id: 'chart-cost-compare',
+    title: '成本结构对比',
+    subtitle: '自动化前后'
+  });
 
-    function updatePhase() {
-      const phase = objectives.phases.find((item) => item.id === STATE.currentObjectivePhase);
-      metricsWrap.innerHTML = '';
-      const grouped = { efficiency: [], risk: [], cost: [] };
-      phase.metrics.forEach((metric) => {
-        grouped[metric.category].push(metric);
-        const card = createElement('article', { className: 'glass-card' });
-        card.innerHTML = '<h3>' + metric.metric + '</h3>' +
-          '<p class="metric-caption">' + I18N.zh.baseline + '：' + displayValue(metric, metric.baseline) + '</p>' +
-          '<p class="metric-caption">' + I18N.zh.target + '：' + displayValue(metric, metric.target) + '</p>';
-        metricsWrap.appendChild(card);
-      });
-      ChartManager.initChart('chart-objective-gauges', {
-        backgroundColor: 'transparent',
-        tooltip: { trigger: 'axis' },
-        legend: { data: ['基准', '目标'], textStyle: { color: '#BFD4FF' } },
-        grid: { left: 60, right: 20, top: 50, bottom: 40 },
-        textStyle: { color: '#BFD4FF' },
-        xAxis: {
-          type: 'category',
-          data: Object.keys(grouped).map((key) => key.toUpperCase()),
-          axisLine: { lineStyle: { color: '#1F6FEB' } }
-        },
-        yAxis: {
-          type: 'value',
-          axisLine: { lineStyle: { color: '#1F6FEB' } },
-          splitLine: { lineStyle: { color: 'rgba(31,111,235,0.2)' } }
-        },
-        series: [
-          {
-            name: '基准',
-            type: 'bar',
-            data: Object.values(grouped).map((metrics) => average(metrics.map((m) => m.baseline))),
-            itemStyle: { color: 'rgba(31,111,235,0.6)' }
-          },
-          {
-            name: '目标',
-            type: 'bar',
-            data: Object.values(grouped).map((metrics) => average(metrics.map((m) => m.target))),
-            itemStyle: { color: 'rgba(31,191,154,0.75)' }
-          }
-        ]
-      });
-    }
+  const averagesBefore = [];
+  const averagesAfter = [];
+  const categories = [];
+  Object.entries(OBJECTIVE_GROUPS).forEach(([category, keys]) => {
+    const points = keys
+      .map((metricKey) => {
+        if (!(metricKey in phaseData)) return null;
+        const meta = OBJECTIVE_META[metricKey];
+        const change = normalizeChange(phaseData[metricKey], meta);
+        return change;
+      })
+      .filter(Boolean);
+    if (!points.length) return;
+    const beforeAvg = average(points.map((item) => item.before));
+    const afterAvg = average(points.map((item) => item.after));
+    categories.push(OBJECTIVE_CATEGORY_LABELS[category] || category);
+    averagesBefore.push(beforeAvg);
+    averagesAfter.push(afterAvg);
+  });
 
-    const cost = assets.costStructure;
+  ChartManager.initChart('chart-objective-gauges', {
+    backgroundColor: 'transparent',
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['基准', '目标'], textStyle: { color: '#BFD4FF' } },
+    grid: { left: 60, right: 20, top: 50, bottom: 40 },
+    textStyle: { color: '#BFD4FF' },
+    xAxis: { type: 'category', data: categories, axisLine: { lineStyle: { color: '#1F6FEB' } } },
+    yAxis: { type: 'value', axisLine: { lineStyle: { color: '#1F6FEB' } }, splitLine: { lineStyle: { color: 'rgba(31,111,235,0.2)' } } },
+    series: [
+      { name: '基准', type: 'bar', data: averagesBefore, itemStyle: { color: 'rgba(31,111,235,0.6)' } },
+      { name: '目标', type: 'bar', data: averagesAfter, itemStyle: { color: 'rgba(31,191,154,0.75)' } }
+    ]
+  });
+
+  const cost = STATE.data?.dataAssets?.costStructure;
+  if (cost) {
     ChartManager.initChart('chart-cost-compare', {
       backgroundColor: 'transparent',
       tooltip: { trigger: 'axis' },
       legend: { data: ['优化前', '优化后'], textStyle: { color: '#BFD4FF' } },
       grid: { left: 60, right: 20, top: 50, bottom: 40 },
       textStyle: { color: '#BFD4FF' },
-      xAxis: {
-        type: 'category',
-        data: cost.categories,
-        axisLine: { lineStyle: { color: '#1F6FEB' } }
-      },
-      yAxis: {
-        type: 'value',
-        axisLine: { lineStyle: { color: '#1F6FEB' } },
-        splitLine: { lineStyle: { color: 'rgba(31,111,235,0.2)' } }
-      },
+      xAxis: { type: 'category', data: cost.categories, axisLine: { lineStyle: { color: '#1F6FEB' } } },
+      yAxis: { type: 'value', axisLine: { lineStyle: { color: '#1F6FEB' } }, splitLine: { lineStyle: { color: 'rgba(31,111,235,0.2)' } } },
       series: [
         { name: '优化前', type: 'bar', data: cost.before, itemStyle: { color: 'rgba(139,163,199,0.7)' } },
         { name: '优化后', type: 'bar', data: cost.after, itemStyle: { color: 'rgba(31,191,154,0.75)' } }
       ]
     });
+  }
+}
 
-    updatePhase();
+
+  function renderTechnology(technology, dataAssets) {
+  const panel = document.getElementById('panel-technology');
+  panel.innerHTML = '';
+
+  const archCard = createElement('section', { className: 'glass-card' });
+  archCard.innerHTML = '<h3>技术架构总览</h3>';
+  const archImg = createElement('img', {
+    attrs: {
+      src: technology.architectureDiagram,
+      alt: '双链融合技术架构图',
+      loading: 'lazy'
+    }
+  });
+  archCard.appendChild(archImg);
+  panel.appendChild(archCard);
+
+  const scoreCard = createElement('section', { className: 'glass-card' });
+  scoreCard.innerHTML = `<h3>S 信用评分模型</h3><p>${technology.scoreModel.formula}</p>`;
+  const scoreList = createElement('ul');
+  (technology.scoreModel.dimensions || []).forEach((dim, idx) => {
+    const li = createElement('li');
+    li.innerHTML = `<strong>S${idx + 1} ${dim.name}</strong>｜${(dim.items || []).join(' / ')}`;
+    scoreList.appendChild(li);
+  });
+  scoreCard.appendChild(scoreList);
+  panel.appendChild(scoreCard);
+
+  const s4Info = technology.scoreModel?.S4;
+  if (s4Info) {
+    const s4Card = createElement('section', { className: 'glass-card s4-card' });
+    s4Card.innerHTML = '<h3>S4 行业适配分细则</h3>';
+    const s4Grid = createElement('div', { className: 's4-grid' });
+
+    const leftCol = createElement('div', { className: 's4-column' });
+    leftCol.appendChild(createElement('h4', { text: '行业景气度分档' }));
+    const bucketList = createElement('ul');
+    (s4Info.prosperity?.buckets || []).forEach((bucket) => {
+      bucketList.appendChild(createElement('li', { text: `${bucket.label}：${bucket.score} 分` }));
+    });
+    leftCol.appendChild(bucketList);
+
+    const rightCol = createElement('div', { className: 's4-column' });
+    const policy = s4Info.policySupport || { base: 0, addons: [], addonsCap: 0, cap: 0 };
+    const policyTitle = `政策扶持加分（基础 ${policy.base || 0} 分，加分上限 ${policy.addonsCap || 0} 分）`;
+    rightCol.appendChild(createElement('h4', { text: policyTitle }));
+    const policyList = createElement('ul');
+    (policy.addons || []).forEach((addon) => {
+      policyList.appendChild(createElement('li', { text: `${addon.label}：${addon.score} 分` }));
+    });
+    rightCol.appendChild(policyList);
+    const policyCapValue = typeof policy.cap === 'number' ? policy.cap : (policy.base || 0) + (policy.addonsCap || 0);
+    rightCol.appendChild(createElement('p', { className: 'metric-caption', text: `加分封顶：${policyCapValue} 分` }));
+
+    s4Grid.append(leftCol, rightCol);
+    s4Card.appendChild(s4Grid);
+    panel.appendChild(s4Card);
   }
 
-function renderTechnology(technology, dataAssets) {
-    const panel = document.getElementById('panel-technology');
-    panel.innerHTML = '';
+  const limitCard = createElement('section', { className: 'glass-card' });
+  limitCard.innerHTML = `<h3>L 额度公式</h3><p>${technology.limitModel.formula}</p>`;
+  const kList = createElement('ul');
+  Object.entries(technology.limitModel.kFactors || {}).forEach(([industry, value]) => {
+    kList.appendChild(createElement('li', { text: `行业 ${industry.toUpperCase()}：K = ${value}` }));
+  });
+  limitCard.appendChild(kList);
+  const creditList = createElement('ul');
+  (technology.limitModel.creditBands || []).forEach((band) => {
+    creditList.appendChild(createElement('li', { text: `${band.range} → C=${band.coefficient}｜${band.label}` }));
+  });
+  limitCard.appendChild(creditList);
+  const notesList = createElement('ul');
+  (technology.limitModel.notes || []).forEach((note) => notesList.appendChild(createElement('li', { text: note })));
+  limitCard.appendChild(notesList);
+  panel.appendChild(limitCard);
 
-    const archCard = createElement('section', { className: 'glass-card arch-card' });
-    archCard.innerHTML = '<h3>技术架构总览</h3>';
-    const archImg = createElement('img', {
-      attrs: {
-        src: technology.architectureDiagram,
-        alt: '双链融合技术架构图',
-        loading: 'eager'
-      }
-    });
-    archCard.appendChild(archImg);
-    panel.appendChild(archCard);
+  const calcContainer = createElement('div', { attrs: { id: 'calculator-panel' } });
+  panel.appendChild(calcContainer);
+  ScoreLimitCalculator.init(calcContainer, technology.calculatorDefaults, technology);
 
-    const scoreCard = createElement('section', { className: 'glass-card' });
-    scoreCard.innerHTML = `
-      <h3>S 信用评分模型</h3>
-      <div class="formula-card">
-        <div class="formula"><span class="var">S</span> <span class="op">=</span> <span class="num">0.3</span><span class="op">×</span><span class="var">S1</span> <span class="op">+</span> <span class="num">0.4</span><span class="op">×</span><span class="var">S2</span> <span class="op">+</span> <span class="num">0.2</span><span class="op">×</span><span class="var">S3</span> <span class="op">+</span> <span class="num">0.1</span><span class="op">×</span><span class="var">S4</span></div>
-        <p class="formula-hint">权重：S1/S2/S3/S4 分别 0.3/0.4/0.2/0.1</p>
-      </div>`;
-    const scoreList = createElement('ul');
-    technology.scoreModel.dimensions.forEach((dim, idx) => {
-      const li = createElement('li', { html: `<strong>S${idx + 1} ${dim.name}</strong>｜${dim.items.join(' / ')}｜${dim.note}` });
-      scoreList.appendChild(li);
-    });
-    scoreCard.appendChild(scoreList);
-    panel.appendChild(scoreCard);
+  const componentGrid = createElement('div', { className: 'section-grid' });
+  (technology.components || []).forEach((comp) => {
+    const compCard = createElement('article', { className: 'glass-card' });
+    compCard.innerHTML = `<h3>${comp.name}</h3><p>${comp.description}</p>`;
+    componentGrid.appendChild(compCard);
+  });
+  panel.appendChild(componentGrid);
+}
 
-    const limitCard = createElement('section', { className: 'glass-card' });
-    const notesHtml = (technology.limitModel.notes || []).map((n) => `<li>${n}</li>`).join('');
-    limitCard.innerHTML = `
-      <h3>L 额度公式</h3>
-      <div class="formula-card">
-        <div class="formula">L = <span class="var">R</span> × <span class="var">K</span> × <span class="var">C</span> − <span class="var">D</span></div>
-        <ul class="formula-vars">${notesHtml}</ul>
-      </div>`;
-    const kList = createElement('ul');
-    Object.entries(technology.limitModel.kFactors).forEach(([industry, value]) => {
-      kList.appendChild(createElement('li', { text: `行业 ${industry.toUpperCase()}：K = ${value}` }));
-    });
-    limitCard.appendChild(kList);
-    const creditList = createElement('ul');
-    technology.limitModel.creditBands.forEach((band) => {
-      creditList.appendChild(createElement('li', { text: `${band.range} → C=${band.coefficient}｜${band.label}` }));
-    });
-    limitCard.appendChild(creditList);
-    panel.appendChild(limitCard);
-
-    const calcContainer = createElement('div', { attrs: { id: 'calculator-panel' } });
-    panel.appendChild(calcContainer);
-    ScoreLimitCalculator.init(calcContainer, technology.calculatorDefaults, technology);
-
-    const workflowCard = createElement('section', { className: 'glass-card workflow-card' });
-    workflowCard.innerHTML = '<h3>智能合约执行泳道</h3>';
-    const wfImg = createElement('img', {
-      attrs: {
-        src: technology.workflowDiagram,
-        alt: '智能合约执行流程泳道图',
-        loading: 'eager'
-      }
-    });
-    workflowCard.appendChild(wfImg);
-    panel.appendChild(workflowCard);
-
-    const componentGrid = createElement('div', { className: 'section-grid' });
-    technology.components.forEach((comp) => {
-      const compCard = createElement('article', { className: 'glass-card' });
-      compCard.innerHTML = `<h3>${comp.name}</h3><p>${comp.description}</p>`;
-      componentGrid.appendChild(compCard);
-    });
-    panel.appendChild(componentGrid);
-  }
 
   function renderBusinessFlow(flow, assets) {
     const panel = document.getElementById('panel-business');
@@ -999,12 +1189,15 @@ function renderTechnology(technology, dataAssets) {
     ringCard.innerHTML = '<h3>流程演示播放器</h3>';
     // 线性固定布局：左上排列，不旋转不超框
     const listWrap = createElement('div', { className: 'flow-steps' });
-    flow.timelineSteps.forEach((step) => {
+    flow.timelineSteps.forEach((step, idx) => {
       const stepEl = createElement('div', {
         className: 'glass-card flow-item',
-        attrs: { tabindex: '0', role: 'button', 'aria-label': step.title }
+        attrs: { tabindex: '0', role: 'button', 'aria-label': step.title, 'data-step-index': String(step.step || idx + 1) }
       });
-      stepEl.innerHTML = `<strong>${step.title}</strong><p class="metric-caption">${step.description}</p>`;
+      const indexBadge = createElement('span', { className: 'flow-step-index', text: String(step.step || idx + 1).padStart(2, '0') });
+      const title = createElement('strong', { text: step.title });
+      const desc = createElement('p', { className: 'flow-item-desc', text: step.description });
+      stepEl.append(indexBadge, title, desc);
       listWrap.appendChild(stepEl);
     });
     ringCard.appendChild(listWrap);
@@ -1017,7 +1210,7 @@ function renderTechnology(technology, dataAssets) {
     wrapper.appendChild(detailCard);
     panel.appendChild(wrapper);
 
-    TimelinePlayer.init(listWrap.querySelectorAll('.flow-item'), detailPane, { data: flow.timelineSteps, speed: flow.player.defaultSpeed });
+    TimelinePlayer.init(listWrap.querySelectorAll('.flow-item'), detailPane, { data: flow.timelineSteps, speed: flow.player.defaultSpeed, container: listWrap });
 
     const chartContainer = createChartCard(panel, {
       id: 'chart-flow-timeline',
@@ -1176,115 +1369,139 @@ function renderTechnology(technology, dataAssets) {
   }
 
   function renderRisk(risk) {
-    const panel = document.getElementById('panel-risk');
-    panel.innerHTML = '';
-    const heatCard = createChartCard(panel, {
-      id: 'chart-risk-matrix',
-      title: '风险热度矩阵',
-      subtitle: '概率 × 损失等级'
-    });
-    const categories = risk.matrix.map((item, idx) => ({
-      value: [idx, idx],
-      name: item.category,
-      score: item.score
-    }));
-    const data = risk.matrix.map((item, idx) => [idx, 0, Number((item.probability * item.loss).toFixed(3))]);
-    ChartManager.initChart('chart-risk-matrix', {
-      backgroundColor: 'transparent',
-      tooltip: {
-        position: 'top',
-        formatter: (params) => {
-          const item = risk.matrix[params.data[0]];
-          return `${item.category}<br/>概率：${formatPercent(item.probability, 0)}<br/>损失：${formatPercent(item.loss, 0)}<br/>等级：${item.grade}`;
-        }
-      },
-      xAxis: {
-        type: 'category',
-        data: risk.matrix.map((item) => item.category),
-        splitArea: { show: true },
-        axisLine: { lineStyle: { color: '#1F6FEB' } }
-      },
-      yAxis: {
-        type: 'category',
-        data: ['热度'],
-        axisLine: { lineStyle: { color: '#1F6FEB' } }
-      },
-      visualMap: {
-        min: 0,
-        max: Math.max(...risk.matrix.map((item) => item.score)),
-        calculable: false,
-        orient: 'horizontal',
-        left: 'center',
-        bottom: 0,
-        inRange: { color: ['#1F6FEB', '#E0B95B'] }
-      },
-      series: [{
-        name: '风险热度',
-        type: 'heatmap',
-        data,
-        label: { show: true, color: '#fff', formatter: (params) => params.data[2].toFixed(2) },
-        emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.5)' } }
-      }]
-    });
+  const panel = document.getElementById('panel-risk');
+  panel.innerHTML = '';
+  createChartCard(panel, {
+    id: 'chart-risk-matrix',
+    title: '风险热度矩阵',
+    subtitle: '概率 × 损失'
+  });
 
-    const riskList = createElement('div', { className: 'section-grid' });
-    const detailCard = createElement('section', { className: 'glass-card' });
-    detailCard.innerHTML = `<h3>${I18N.zh.riskStrategy}</h3>`;
-    const detailContent = createElement('div');
-    detailCard.appendChild(detailContent);
-    const riskGrid = createElement('div', { className: 'risk-grid' });
-    const riskRight = createElement('div', { className: 'risk-right' });
-    riskGrid.appendChild(riskList);
-    riskRight.appendChild(detailCard);
-    riskGrid.appendChild(riskRight);
-    panel.appendChild(riskGrid);
+  const categories = (risk.matrix || []).map((item) => item.type);
+  const heatData = (risk.matrix || []).map((item, index) => [index, 0, Number((item.prob * item.loss).toFixed(3))]);
+  ChartManager.initChart('chart-risk-matrix', {
+    backgroundColor: 'transparent',
+    tooltip: {
+      position: 'top',
+      formatter: (params) => {
+        const item = risk.matrix[params.data[0]];
+        return `${item.type}<br/>概率：${formatPercent(item.prob, 1)}<br/>损失：${formatNumber(item.loss, { digits: 2 })}<br/>等级：${item.level}`;
+      }
+    },
+    xAxis: {
+      type: 'category',
+      data: categories,
+      splitArea: { show: true },
+      axisLine: { lineStyle: { color: '#1F6FEB' } }
+    },
+    yAxis: {
+      type: 'category',
+      data: ['风险热度'],
+      axisLine: { lineStyle: { color: '#1F6FEB' } }
+    },
+    visualMap: {
+      min: 0,
+      max: heatData.reduce((max, item) => Math.max(max, item[2]), 0.5),
+      calculable: false,
+      orient: 'horizontal',
+      left: 'center',
+      bottom: 0,
+      inRange: { color: ['#1F6FEB', '#E0B95B'] }
+    },
+    series: [{
+      name: '风险热度',
+      type: 'heatmap',
+      data: heatData,
+      label: { show: true, color: '#fff', formatter: (params) => params.data[2].toFixed(2) },
+      emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.5)' } }
+    }]
+  });
 
-    function renderRiskDetail(id) {
-      const detail = risk.detail[id];
-      detailContent.innerHTML = '';
-      if (!detail) return;
-      const issues = createElement('ul');
-      detail.issues.forEach((issue) => issues.appendChild(createElement('li', { text: issue })));
-      const strategies = createElement('ul');
-      detail.strategies.forEach((strategy) => strategies.appendChild(createElement('li', { text: strategy })));
-      const triggers = createElement('ul');
-      detail.triggers.forEach((trigger) => triggers.appendChild(createElement('li', { text: trigger })));
-      detailContent.appendChild(createElement('h4', { text: '风险点' }));
-      detailContent.appendChild(issues);
-      detailContent.appendChild(createElement('h4', { text: '对策' }));
-      detailContent.appendChild(strategies);
-      detailContent.appendChild(createElement('h4', { text: '触发条件' }));
-      detailContent.appendChild(triggers);
+  const riskList = createElement('div', { className: 'section-grid' });
+  (risk.matrix || []).forEach((item) => {
+    const card = createElement('article', { className: 'glass-card' });
+    card.innerHTML = `<h3>${item.type}风险</h3><p class="metric-caption">概率：${formatPercent(item.prob, 1)}｜损失：${formatNumber(item.loss, { digits: 2 })}｜等级：${item.level}</p>`;
+    const btn = createElement('button', {
+      className: 'btn btn-outline',
+      text: '查看应对策略',
+      attrs: { type: 'button', 'data-risk': item.type }
+    });
+    btn.addEventListener('click', () => renderRiskDetail(item.type));
+    card.appendChild(btn);
+    riskList.appendChild(card);
+  });
+  panel.appendChild(riskList);
+
+  const detailCard = createElement('section', { className: 'glass-card' });
+  detailCard.innerHTML = `<h3>${I18N.zh.riskStrategy}</h3>`;
+  const detailContent = createElement('div');
+  detailCard.appendChild(detailContent);
+  panel.appendChild(detailCard);
+
+  const controlCard = createElement('section', { className: 'glass-card' });
+  controlCard.innerHTML = `<h3>${I18N.zh.controlLayer}</h3>`;
+  Object.values(risk.controls || {}).forEach((layer) => {
+    const block = createElement('div');
+    const sla = layer.sla ? (layer.sla.unit === 'minute' ? `${layer.sla.value} 分钟` : layer.sla) : '';
+    block.innerHTML = `<strong>${layer.title}</strong>${sla ? `｜SLA：${sla}` : ''}`;
+    const list = createElement('ul');
+    (layer.actions || []).forEach((action) => list.appendChild(createElement('li', { text: action })));
+    block.appendChild(list);
+    controlCard.appendChild(block);
+  });
+  panel.appendChild(controlCard);
+
+  function formatDetailItem(item) {
+    if (!item) return '';
+    if (typeof item === 'string') return item;
+    let base = item.text || '';
+    if (item.value !== undefined) {
+      if (item.unit === 'budgetShare' || item.unit === 'coverage' || item.unit === 'guarantee') {
+        base += `：${formatPercent(item.value, 0)}`;
+      } else if (item.unit === 'minute') {
+        base += `：${formatNumber(item.value, { digits: 0 })} 分钟`;
+      } else if (item.unit === 'tenThousand') {
+        base += `：${formatNumber(item.value, { digits: 0 })} 万元`;
+      } else if (item.unit === 'yuan') {
+        base += `：${formatNumber(item.value / 10000, { digits: 0 })} 万元`;
+      } else if (item.unit === 'count') {
+        base += `：≥${item.value} 家`;
+      } else {
+        base += `：${item.value}`;
+      }
+    } else if (item.frequency) {
+      base += `（${item.frequency === 'quarterly' ? '季度' : item.frequency}）`;
     }
-
-    risk.matrix.forEach((item) => {
-      const card = createElement('article', { className: 'glass-card' });
-      const btn = createElement('button', {
-        className: 'btn btn-outline',
-        text: item.category,
-        attrs: { type: 'button' }
-      });
-      btn.addEventListener('click', () => renderRiskDetail(item.id));
-      card.appendChild(btn);
-      card.appendChild(createElement('p', { className: 'metric-caption', text: `等级：${item.grade}｜优先级：${item.priority}` }));
-      riskList.appendChild(card);
-    });
-
-    renderRiskDetail(risk.matrix[0].id);
-
-    const controlCard = createElement('section', { className: 'glass-card' });
-    controlCard.innerHTML = `<h3>${I18N.zh.controlLayer}</h3>`;
-    Object.entries(risk.controls).forEach(([key, value]) => {
-      const block = createElement('div');
-      block.innerHTML = `<strong>${value.title}</strong>｜SLA：${value.sla || '—'}`;
-      const list = createElement('ul');
-      value.actions.forEach((action) => list.appendChild(createElement('li', { text: action })));
-      block.appendChild(list);
-      controlCard.appendChild(block);
-    });
-    // 将策略与管控体系放到右侧列，形成左右两栏布局
-    riskRight.appendChild(controlCard);
+    return base;
   }
+
+  function renderRiskDetail(type) {
+    const keyMap = { '技术': 'technical', '业务': 'business', '合作': 'cooperation', '合规': 'compliance' };
+    const detail = risk.detail[keyMap[type]];
+    if (!detail) { detailContent.innerHTML = '<p>暂无详情。</p>'; return; }
+    detailContent.innerHTML = '';
+    const issueTitle = createElement('h4', { text: '风险点' });
+    detailContent.appendChild(issueTitle);
+    const issueList = createElement('ul');
+    (detail.issues || []).forEach((issue) => issueList.appendChild(createElement('li', { text: formatDetailItem(issue) })));
+    detailContent.appendChild(issueList);
+    const strategyTitle = createElement('h4', { text: '应对措施' });
+    detailContent.appendChild(strategyTitle);
+    const strategyList = createElement('ul');
+    (detail.strategies || []).forEach((strategy) => strategyList.appendChild(createElement('li', { text: formatDetailItem(strategy) })));
+    detailContent.appendChild(strategyList);
+    const triggerTitle = createElement('h4', { text: '触发条件' });
+    detailContent.appendChild(triggerTitle);
+    const triggerList = createElement('ul');
+    (detail.triggers || []).forEach((trigger) => triggerList.appendChild(createElement('li', { text: formatDetailItem(trigger) })));
+    detailContent.appendChild(triggerList);
+  }
+
+  if (risk.matrix && risk.matrix.length) {
+    renderRiskDetail(risk.matrix[0].type);
+  }
+}
+
 
   function renderRegulatory(regulatory) {
     const panel = document.getElementById('panel-regulatory');
@@ -1397,76 +1614,84 @@ function renderTechnology(technology, dataAssets) {
   }
 
   function renderOutcomes(outcomes) {
-    const panel = document.getElementById('panel-outcomes');
-    panel.innerHTML = '';
-    createChartCard(panel, {
-      id: 'chart-outcome-projection',
-      title: '三年成果展望',
-      subtitle: '服务规模 & 融资额度'
-    });
-    ChartManager.initChart('chart-outcome-projection', {
-      backgroundColor: 'transparent',
-      legend: { data: ['服务企业数', '融资额度 (亿元)'], textStyle: { color: '#BFD4FF' } },
-      grid: { left: 60, right: 60, top: 50, bottom: 40 },
-      textStyle: { color: '#BFD4FF' },
-      tooltip: { trigger: 'axis' },
-      xAxis: { type: 'category', data: outcomes.projection.map((item) => item.year), axisLine: { lineStyle: { color: '#1F6FEB' } } },
-      yAxis: [
-        { type: 'value', name: '服务企业数', axisLine: { lineStyle: { color: '#1F6FEB' } }, splitLine: { lineStyle: { color: 'rgba(31,111,235,0.2)' } } },
-        { type: 'value', name: '融资额度 (亿元)', axisLine: { lineStyle: { color: '#1FBF9A' } }, splitLine: { show: false } }
-      ],
-      series: [
-        { name: '服务企业数', type: 'bar', data: outcomes.projection.map((item) => item.serviceEnterprises), itemStyle: { color: 'rgba(31,111,235,0.7)' } },
-        { name: '融资额度 (亿元)', type: 'line', yAxisIndex: 1, data: outcomes.projection.map((item) => item.financingAmount), lineStyle: { color: '#E0B95B' }, areaStyle: { color: 'rgba(224,185,91,0.25)' } }
-      ]
-    });
+  const panel = document.getElementById('panel-outcomes');
+  panel.innerHTML = '';
+  createChartCard(panel, {
+    id: 'chart-outcome-projection',
+    title: '三年成果展望',
+    subtitle: '服务企业数 & 融资规模'
+  });
+  const projection = outcomes.projection || [];
+  ChartManager.initChart('chart-outcome-projection', {
+    backgroundColor: 'transparent',
+    legend: { data: ['服务企业数', '融资额度 (亿元)'], textStyle: { color: '#BFD4FF' } },
+    grid: { left: 60, right: 60, top: 50, bottom: 40 },
+    textStyle: { color: '#BFD4FF' },
+    tooltip: { trigger: 'axis' },
+    xAxis: { type: 'category', data: projection.map((item) => item.year), axisLine: { lineStyle: { color: '#1F6FEB' } } },
+    yAxis: [
+      { type: 'value', name: '服务企业数', axisLine: { lineStyle: { color: '#1F6FEB' } }, splitLine: { lineStyle: { color: 'rgba(31,111,235,0.2)' } } },
+      { type: 'value', name: '融资额度 (亿元)', axisLine: { lineStyle: { color: '#1FBF9A' } }, splitLine: { show: false } }
+    ],
+    series: [
+      { name: '服务企业数', type: 'bar', data: projection.map((item) => item.enterprises), itemStyle: { color: 'rgba(31,111,235,0.7)' } },
+      { name: '融资额度 (亿元)', type: 'line', yAxisIndex: 1, data: projection.map((item) => item.financing), lineStyle: { color: '#E0B95B' }, areaStyle: { color: 'rgba(224,185,91,0.25)' } }
+    ]
+  });
 
-    const savingsCard = createElement('section', { className: 'glass-card' });
-    savingsCard.innerHTML = '<h3>成本节省估算</h3>';
-    const savingsList = createElement('ul');
-    savingsList.appendChild(createElement('li', { text: `企业端：${formatNumber(outcomes.costSavings.enterprise / 100000000, { digits: 2 })} 亿元/年` }));
-    savingsList.appendChild(createElement('li', { text: `机构端人工：-${formatPercent(outcomes.costSavings.institution.manualReduction, 0)}` }));
-    savingsList.appendChild(createElement('li', { text: `纸质成本节省：${formatNumber(outcomes.costSavings.institution.paperCost / 10000, { digits: 0 })} 万元/年` }));
-    savingsCard.appendChild(savingsList);
-    panel.appendChild(savingsCard);
+  const savingsCard = createElement('section', { className: 'glass-card' });
+  savingsCard.innerHTML = '<h3>成本节省估算</h3>';
+  const savingsList = createElement('ul');
+  savingsList.appendChild(createElement('li', { text: `企业端：约 ${formatNumber(outcomes.costSavings.enterprise / 100000000, { digits: 1 })} 亿元/年` }));
+  savingsList.appendChild(createElement('li', { text: `机构端人工：-${formatPercent(outcomes.costSavings.institution.manualReduction, 0)}` }));
+  savingsList.appendChild(createElement('li', { text: `纸质单据成本节省：${formatNumber(outcomes.costSavings.institution.paperCost / 10000, { digits: 0 })} 万元/年` }));
+  savingsList.appendChild(createElement('li', { text: `流程自动化节省：${formatNumber(outcomes.costSavings.institution.automationSaving / 10000, { digits: 0 })} 万元/年` }));
+  savingsCard.appendChild(savingsList);
+  panel.appendChild(savingsCard);
 
-    const impactCard = createElement('section', { className: 'glass-card' });
-    impactCard.innerHTML = '<h3>行业效益</h3>';
-    const impactList = createElement('ul');
-    impactList.appendChild(createElement('li', { text: `效率提升：${formatPercent(outcomes.industryImpact.efficiency, 0)}` }));
-    impactList.appendChild(createElement('li', { text: `不良率下降：${formatPercent(Math.abs(outcomes.industryImpact.badLoan), 0)}` }));
-    impactList.appendChild(createElement('li', { text: `可得性提升：${formatPercent(outcomes.industryImpact.access, 0)}` }));
-    impactCard.appendChild(impactList);
-    panel.appendChild(impactCard);
+  const impactCard = createElement('section', { className: 'glass-card' });
+  impactCard.innerHTML = '<h3>行业效益</h3>';
+  const impactList = createElement('ul');
+  impactList.appendChild(createElement('li', { text: `效率提升：${formatPercent(outcomes.industryImpact.efficiency, 0)}` }));
+  impactList.appendChild(createElement('li', { text: `不良率下降：${formatPercent(Math.abs(outcomes.industryImpact.badLoan), 0)}` }));
+  impactList.appendChild(createElement('li', { text: `融资可得性提升：${formatPercent(outcomes.industryImpact.access, 0)}` }));
+  impactCard.appendChild(impactList);
+  panel.appendChild(impactCard);
 
-    const scaleCard = createElement('section', { className: 'glass-card' });
-    scaleCard.innerHTML = '<h3>可复制推广</h3>';
-    const scaleList = createElement('ul');
-    outcomes.scalability.forEach((item) => scaleList.appendChild(createElement('li', { text: item })));
-    scaleCard.appendChild(scaleList);
-    panel.appendChild(scaleCard);
-  }
+  const scaleCard = createElement('section', { className: 'glass-card' });
+  scaleCard.innerHTML = '<h3>可复制推广</h3>';
+  const scaleList = createElement('ul');
+  (outcomes.scalability || []).forEach((item) => scaleList.appendChild(createElement('li', { text: item })));
+  scaleCard.appendChild(scaleList);
+  panel.appendChild(scaleCard);
+}
+
 
   function renderTeam(team, meta) {
-    const panel = document.getElementById('panel-team');
-    panel.innerHTML = '';
-    const teamCard = createElement('section', { className: 'glass-card' });
-    teamCard.innerHTML = '<h3>团队与鸣谢</h3>';
-    const members = createElement('ul');
-    team.members.forEach((member) => members.appendChild(createElement('li', { text: `${member.name}｜${member.role}` })));
-    teamCard.appendChild(members);
+  const panel = document.getElementById('panel-team');
+  panel.innerHTML = '';
+  const teamCard = createElement('section', { className: 'glass-card' });
+  teamCard.innerHTML = '<h3>团队与鸣谢</h3>';
+  const members = createElement('ul');
+  (team.members || []).forEach((member) => members.appendChild(createElement('li', { text: `${member.name}｜${member.role}` })));
+  teamCard.appendChild(members);
+  if (team.thanks) {
     teamCard.appendChild(createElement('p', { text: team.thanks }));
-    panel.appendChild(teamCard);
-
-    const licenseCard = createElement('section', { className: 'glass-card' });
-    licenseCard.innerHTML = `<p>${team.license}</p>`;
-    panel.appendChild(licenseCard);
-
-    const footer = document.getElementById('app-footer');
-    footer.innerHTML = `© ${new Date().getFullYear()} ${meta.school}｜${meta.slogan}`;
-    // 删除“指导老师”栏，仅展示队员信息
-    footer.appendChild(createElement('span', { text: `队员：${team.members.map((m) => m.name).join('、')}` }));
   }
+  panel.appendChild(teamCard);
+
+  if (team.license) {
+    const licenseCard = createElement('section', { className: 'glass-card' });
+    licenseCard.appendChild(createElement('p', { text: team.license }));
+    panel.appendChild(licenseCard);
+  }
+
+  const footer = document.getElementById('app-footer');
+  footer.innerHTML = `© ${new Date().getFullYear()} ${meta.school || ''}｜${meta.slogan || ''}`;
+  const teamSpan = createElement('span', { text: `队员：${(team.members || []).map((m) => m.name).join('、')}` });
+  footer.appendChild(teamSpan);
+}
+
 
   function renderAll(data) {
     renderMeta(data.meta);

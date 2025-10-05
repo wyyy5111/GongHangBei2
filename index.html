@@ -68,6 +68,8 @@
   <script src="assets/js/app.js" type="module"></script>
 
   
+
+  
   <script id="mock-data" type="application/json">
 {
   "meta": {
@@ -80,8 +82,9 @@
       "汪文吉"
     ],
     "school": "河南大学",
-    "slogan": "双链融合·可信融资 · 数据即信用",
-    "timestamp": "2025-08",
+    "slogan": "双链融合·可信融资·数据即信用",
+    "timestamp": "2025-10",
+    "timestampSort": "2025-10-01",
     "printButtonText": "导出为 PDF（打印样式）"
   },
   "navigation": [
@@ -137,44 +140,87 @@
     }
   ],
   "overview": {
-    "kpiFlip": [
+    "microCoverageTarget": 0.6,
+    "kpiCards": [
       {
-        "id": "cycle",
-        "label": "周期压缩",
+        "id": "cycleDays",
+        "label": "融资周期压缩",
         "unit": "工作日",
-        "baseline": 18,
-        "current": 3,
-        "improvement": 0.83,
-        "description": "传统 18 → ≤3 个工作日"
+        "format": "days",
+        "change": {
+          "before": 18,
+          "after": 3
+        },
+        "description": "核心企业上下游融资周期由 18 个工作日缩短至 ≤3 个工作日"
       },
       {
-        "id": "tplus",
+        "id": "tplusOne",
         "label": "T+1 放款覆盖率",
         "unit": "",
-        "baseline": 0.52,
-        "current": 0.7,
-        "target": 0.7,
-        "description": "中期目标 ≥70%"
+        "format": "percent",
+        "change": {
+          "before": 0.35,
+          "after": 0.7
+        },
+        "description": "70% 融资申请实现 T+1 放款，小微企业覆盖率不低于 60%"
       },
       {
         "id": "badDebt",
-        "label": "坏账率",
+        "label": "坏账率控制",
         "unit": "",
-        "baseline": 0.031,
-        "current": 0.008,
-        "improvement": 0.742,
-        "description": "较 3.1% 下降 ≈74.2%"
+        "format": "percent",
+        "change": {
+          "before": 0.031,
+          "after": 0.008
+        },
+        "description": "坏账率由 3.1% 降至 0.8% 以下，降幅约 74.2%"
       },
       {
-        "id": "fraud",
+        "id": "fraudDetect",
         "label": "虚假贸易识别准确率",
         "unit": "",
-        "baseline": 0.9,
-        "current": 0.98,
-        "target": 0.98,
-        "description": "中期目标 ≥98%"
+        "format": "percent",
+        "change": {
+          "before": 0.88,
+          "after": 0.98
+        },
+        "description": "智能风控识别准确率提升至 ≥98%"
       }
     ],
+    "threeFlow": {
+      "title": "三流协同：信息流、物流、资金流一体化",
+      "description": "以区块链为可信底座，统一汇聚贸易合同、物流轨迹与资金流转，形成可追溯的“交易事实链”，让数据成为新型信用资产。",
+      "poster": "assets/img/triple-flow.svg",
+      "flows": [
+        {
+          "key": "info",
+          "name": "信息流",
+          "highlights": [
+            "合同签署留痕",
+            "发票验真",
+            "政策合规映射"
+          ]
+        },
+        {
+          "key": "logistics",
+          "name": "物流流",
+          "highlights": [
+            "IoT 轨迹",
+            "仓储签收",
+            "温控监测"
+          ]
+        },
+        {
+          "key": "funds",
+          "name": "资金流",
+          "highlights": [
+            "智能授信",
+            "额度池调度",
+            "链上留痕对账"
+          ]
+        }
+      ]
+    },
     "ctaButtons": [
       {
         "id": "action-flow",
@@ -196,281 +242,154 @@
         "label": "风险与效益",
         "targetTab": "risk"
       }
-    ],
-    "threeFlow": {
-      "title": "三流合一：信息流·物流·资金流",
-      "description": "联盟链让订单、物流、资金三流实时对齐，“数据即信用”为每一笔融资提供可信背书。",
-      "poster": "assets/img/triple-flow.svg",
-      "flows": [
-        {
-          "name": "信息流",
-          "highlights": [
-            "核心企业 ERP",
-            "供应商系统",
-            "监管节点"
-          ]
-        },
-        {
-          "name": "物流",
-          "highlights": [
-            "IoT 追踪",
-            "冷链监测",
-            "签收留痕"
-          ]
-        },
-        {
-          "name": "资金流",
-          "highlights": [
-            "额度池",
-            "白名单授信",
-            "自动放款"
-          ]
-        }
-      ]
-    }
+    ]
   },
   "background": {
     "painPoints": [
       {
         "id": "efficiency",
-        "title": "流程效率低",
-        "description": "纸质核验与多头确认导致放款周期长达 18 个工作日。",
-        "impact": "供应链资金占压与中小企业错失交易机会。"
+        "title": "流程效率低下与信任成本高",
+        "description": "传统贸易融资依赖纸质单据和人工核验，审批链条长、重复验证多，缺乏可信协同机制。",
+        "impact": "融资到账周期被拉长，上下游企业现金流紧张，信任成本持续攀升。"
       },
       {
         "id": "information",
-        "title": "信息不对称",
-        "description": "贸易信息散落在 ERP、物流、发票等系统，真实性难以交叉验证。",
-        "impact": "金融机构难以精准评估信用，导致融资门槛高。"
+        "title": "信息不对称与风控手段落后",
+        "description": "核心企业、供应商、物流等主体的信息流、物流、资金流长期割裂，银行难以验证交易背景。",
+        "impact": "中小企业融资难、融资贵，金融服务无法真正触达真实业务场景。"
       },
       {
         "id": "digitalRisk",
-        "title": "数字化风险",
-        "description": "孤立的数字化系统存在数据孤岛，权限控制与合规稽核能力不足。",
-        "impact": "流程留痕不完整，监管部门缺乏穿透视角。"
+        "title": "新型数字化风险与合规挑战",
+        "description": "线上化、跨境化业务快速扩张，传统风控模型难以覆盖数据安全、隐私保护及跨境监管要求。",
+        "impact": "缺乏可验证数据与法律依据时，容易触发系统性风险与合规压力。"
       }
     ],
     "blockchainAdvantage": {
       "dimensions": [
-        "流程透明度",
-        "履约可信度",
-        "融资效率",
-        "风险预警",
-        "合规支撑"
+        "流程效率",
+        "信用穿透",
+        "风控智能",
+        "自动化水平",
+        "监管协同"
       ],
       "traditional": [
-        46,
-        52,
+        45,
+        38,
         40,
-        48,
-        55
+        35,
+        48
       ],
       "blockchain": [
-        92,
         90,
-        83,
         88,
-        91
+        86,
+        84,
+        89
       ],
-      "notes": "联盟链协同实现信息流、物流、资金流合一。"
+      "notes": "区块链打通三流数据、驱动智能合约执行，实现“流程提速 + 数据信用 + 实时监管”。"
     },
     "policyTimeline": [
       {
-        "date": "2018-09",
-        "title": "人民银行《金融科技发展规划（2019-2021年）》",
-        "summary": "明确区块链是金融科技重点方向，为贸易融资数字化奠定制度基础。"
+        "date": "2019-10",
+        "title": "中共中央政治局第十八次集体学习",
+        "summary": "强调推动区块链和实体经济深度融合，破解中小企业融资难、风控难、监管难。"
       },
       {
         "date": "2020-04",
         "title": "国家发改委《区块链推动实体经济发展行动计划》",
-        "summary": "提出区块链与供应链金融场景深度融合，强化政务与金融数据共享。"
+        "summary": "提出以区块链为抓手培育数智供应链，强化政务与金融数据共享。"
       },
       {
-        "date": "2021-06",
-        "title": "人民银行、银保监会《供应链金融创新与应用指引》",
-        "summary": "强调应收账款融资要实现穿透式管理与风险可控。"
+        "date": "2023-12",
+        "title": "中国数字经济规模持续跃升",
+        "summary": "数字经济与 GDP 占比持续提升，为“数据信用”服务实体经济提供政策与市场空间。"
       },
       {
-        "date": "2022-12",
-        "title": "河南省数字经济发展规划",
-        "summary": "建设“豫贸链”等区域性区块链平台，支持实体企业融资。"
+        "date": "2024-05",
+        "title": "人民银行等部门《关于规范供应链金融业务的通知》",
+        "summary": "明确探索“供应链脱核”模式，依托数据信用与物的信用服务中小企业融资。"
       },
       {
-        "date": "2023-07",
-        "title": "《关于推动应收账款融资服务实体经济的指导意见》",
-        "summary": "提出应收账款平台要加强多方数据共享、强化虚假贸易识别。"
-      },
-      {
-        "date": "2024-10",
-        "title": "人民银行 2024 年金融科技工作要点",
-        "summary": "推动区块链、隐私计算在贸易融资中的综合应用，强化监管穿透。"
+        "date": "2024-08",
+        "title": "关于金融支持新型工业化的指导意见",
+        "summary": "要求提升产业链供应链韧性，鼓励运用区块链等技术打造可信贸易融资基础设施。"
       }
     ],
     "scenario": {
-      "title": "以应收账款融资为例",
-      "description": "核心企业订单驱动的应收账款资产，在联盟链上生成可拆分、可流转的数字债权凭证，实现可信融资。",
+      "title": "以应收账款融资为例的可信贸易融资模式",
+      "description": "围绕“核心企业 + 上下游中小企业”打造可信流转的数字债权凭证，实现三流合一与信用穿透。",
       "bullets": [
-        "应收账款全生命周期数字化：下单、发货、验真、确权、融资、还款",
-        "供应链资金周转从 18 天压缩至 ≤3 天，实现 T+0/T+1 放款",
-        "智能合约驱动自动授信、额度校验与资金流向存证"
+        "供应链合同、订单、物流凭证同步上链，构建不可篡改的交易事实链。",
+        "应收账款经发票验真与电子确权后生成可拆分的数字债权凭证，实现资产标准化。",
+        "智能合约驱动授信、放款、还款全流程自动化，T+0 / T+1 完成资金周转。"
       ],
       "diagram": "assets/img/receivable-scenario.svg"
     }
   },
   "objectives": {
-    "phases": [
-      {
-        "id": "shortTerm",
-        "label": "短期（试点阶段）",
-        "metrics": [
-          {
-            "metric": "放款周期",
-            "baseline": 18,
-            "target": 3,
-            "unit": "工作日",
-            "category": "efficiency"
-          },
-          {
-            "metric": "24 小时内初审占比",
-            "baseline": 0.35,
-            "target": 0.8,
-            "unit": "",
-            "category": "efficiency"
-          },
-          {
-            "metric": "跨境融资周期",
-            "baseline": 50,
-            "target": 10,
-            "unit": "工作日",
-            "category": "efficiency"
-          },
-          {
-            "metric": "坏账率",
-            "baseline": 0.031,
-            "target": 0.008,
-            "unit": "",
-            "category": "risk"
-          },
-          {
-            "metric": "风险初判时长",
-            "baseline": 24,
-            "target": 4,
-            "unit": "小时",
-            "category": "risk"
-          },
-          {
-            "metric": "误判率",
-            "baseline": 0.05,
-            "target": 0.02,
-            "unit": "",
-            "category": "risk"
-          },
-          {
-            "metric": "综合融资成本",
-            "baseline": 0.085,
-            "target": 0.065,
-            "unit": "费率",
-            "category": "cost"
-          },
-          {
-            "metric": "冗余环节消除率",
-            "baseline": 0.2,
-            "target": 0.8,
-            "unit": "",
-            "category": "cost"
-          },
-          {
-            "metric": "利率优惠覆盖率",
-            "baseline": 0.28,
-            "target": 0.55,
-            "unit": "",
-            "category": "cost"
-          }
-        ]
+    "shortTerm": {
+      "cycleDays": {
+        "before": 18,
+        "after": 3
       },
-      {
-        "id": "midTerm",
-        "label": "中期（规模化阶段）",
-        "metrics": [
-          {
-            "metric": "放款周期",
-            "baseline": 18,
-            "target": 2,
-            "unit": "工作日",
-            "category": "efficiency"
-          },
-          {
-            "metric": "24 小时内初审占比",
-            "baseline": 0.35,
-            "target": 0.85,
-            "unit": "",
-            "category": "efficiency"
-          },
-          {
-            "metric": "跨境融资周期",
-            "baseline": 50,
-            "target": 8,
-            "unit": "工作日",
-            "category": "efficiency"
-          },
-          {
-            "metric": "坏账率",
-            "baseline": 0.031,
-            "target": 0.007,
-            "unit": "",
-            "category": "risk"
-          },
-          {
-            "metric": "风险初判时长",
-            "baseline": 24,
-            "target": 3,
-            "unit": "小时",
-            "category": "risk"
-          },
-          {
-            "metric": "误判率",
-            "baseline": 0.05,
-            "target": 0.015,
-            "unit": "",
-            "category": "risk"
-          },
-          {
-            "metric": "综合融资成本",
-            "baseline": 0.085,
-            "target": 0.055,
-            "unit": "费率",
-            "category": "cost"
-          },
-          {
-            "metric": "冗余环节消除率",
-            "baseline": 0.2,
-            "target": 0.82,
-            "unit": "",
-            "category": "cost"
-          },
-          {
-            "metric": "利率优惠覆盖率",
-            "baseline": 0.28,
-            "target": 0.6,
-            "unit": "",
-            "category": "cost"
-          }
-        ]
+      "firstReview24h": {
+        "before": 0.33,
+        "after": 0.8
+      },
+      "riskPreCheckHours": {
+        "before": 48,
+        "after": 4
+      },
+      "badDebt": {
+        "before": 0.031,
+        "after": 0.008
+      },
+      "compositeCost": {
+        "before": 0.068,
+        "after": 0.05
+      },
+      "materialCostSaving": 0.15
+    },
+    "midTerm": {
+      "tPlusOneCoverage": {
+        "before": 0.4,
+        "after": 0.7
+      },
+      "crossBorderCycleDays": {
+        "before": 50,
+        "after": 10
+      },
+      "fraudDetectAccuracy": {
+        "before": 0.9,
+        "after": 0.98
+      },
+      "riskAlertResponseHours": {
+        "before": 24,
+        "after": 1
+      },
+      "redundantRemovalRate": {
+        "before": 0.2,
+        "after": 0.8
+      },
+      "rateDiscountCoverage": {
+        "before": 0.2,
+        "after": 0.6
       }
-    ],
+    },
     "warningRules": {
       "deviationThreshold": 0.1,
-      "message": "偏差超过 10% 时，自动触发分析并在 3 个工作日内提交优化方案"
+      "message": "监测指标偏离目标超过 10% 时，自动触发诊断机制，3 个工作日内形成优化方案。"
     },
     "rollingBadge": {
-      "label": "滚动迭代",
-      "description": "每季度更新合约与风控参数"
+      "label": "迭代保障",
+      "text": "每季度更新智能合约与风控模型，结合新增链上数据动态校准参数。"
     }
   },
   "technology": {
     "architectureDiagram": "assets/img/dual-chain-architecture.svg",
     "scoreModel": {
-      "formula": "S = 0.3×S1 + 0.4×S2 + 0.2×S3 + 0.1×S4",
+      "formula": "S = S₁×30% + S₂×40% + S₃×20% + S₄×10%",
       "weights": {
         "S1": 0.3,
         "S2": 0.4,
@@ -480,45 +399,94 @@
       "dimensions": [
         {
           "id": "S1",
-          "name": "基础资质",
+          "name": "基础资质分",
           "items": [
-            "注册资本",
-            "成立年限",
-            "征信扣分",
-            "诉讼扣分"
+            "注册资本：每 1000 万元计 5 分，最高 50 分",
+            "成立年限：每年 3 分，最高 15 分",
+            "征信记录：无逾期得 30 分，每次逾期扣 5 分",
+            "法律诉讼：每条诉讼记录扣 10 分"
           ],
-          "note": "上限 50/15 + 扣分项"
+          "note": "数据来源：市场监管局注册资本、工商登记与央行征信系统"
         },
         {
           "id": "S2",
-          "name": "履约表现",
+          "name": "供应链履约分",
           "items": [
-            "订单完成率",
-            "确权率",
-            "物流匹配度"
+            "历史订单完成率：100% 满分 30 分，每下降 5% 扣 3 分",
+            "应收账款确权率：100% 满分 30 分，每下降 10% 扣 5 分",
+            "物流匹配度：匹配率 100% 得 40 分，每下降 10% 扣 8 分"
           ],
-          "note": "30/30/40 权重"
+          "note": "通过 ERP、票据及物联网设备上链对比，确保交易真实性"
         },
         {
           "id": "S3",
-          "name": "历史融资",
+          "name": "历史融资分",
           "items": [
-            "还款率",
-            "用途合规",
-            "申请频次"
+            "还款率：100% 按时还款得 50 分，逾期一次扣 10 分",
+            "用途合规性：用途匹配 30 分，违规一次扣 30 分",
+            "申请频次：半年内 ≤3 次得 20 分，每超 1 次扣 5 分"
           ],
-          "note": "50/30/20 权重"
-        },
-        {
-          "id": "S4",
-          "name": "行业适配",
-          "items": [
-            "行业景气度",
-            "政策扶持"
-          ],
-          "note": "各 50"
+          "note": "接入银行信贷系统及资金流向数据，智能合约自动核验用途"
         }
-      ]
+      ],
+      "S4": {
+        "prosperity": {
+          "buckets": [
+            {
+              "key": ">=80",
+              "label": "≥80（高端制造/人工智能）",
+              "score": 50
+            },
+            {
+              "key": "60-79",
+              "label": "60–79（装备制造/电子信息）",
+              "score": 30
+            },
+            {
+              "key": "<60",
+              "label": "<60（传统加工产业）",
+              "score": 10
+            }
+          ]
+        },
+        "policySupport": {
+          "base": 20,
+          "addons": [
+            {
+              "key": "sxzx_national_giant",
+              "label": "国家级专精特新“小巨人”",
+              "score": 15
+            },
+            {
+              "key": "sxzx_provincial",
+              "label": "省级专精特新中小企业",
+              "score": 10
+            },
+            {
+              "key": "sxzx_city",
+              "label": "市级专精特新中小企业",
+              "score": 5
+            },
+            {
+              "key": "green_zero_carbon_leader",
+              "label": "绿色技术领军企业/零碳工厂",
+              "score": 12
+            },
+            {
+              "key": "green_factory_demo",
+              "label": "绿色工厂/低碳示范",
+              "score": 8
+            },
+            {
+              "key": "circular_economy",
+              "label": "资源循环利用重点行业",
+              "score": 5
+            }
+          ],
+          "addonsCap": 30,
+          "cap": 50
+        }
+      }
     },
     "limitModel": {
       "formula": "L = R × K × C − D",
@@ -532,7 +500,7 @@
         {
           "range": ">=90",
           "coefficient": 1.2,
-          "label": "信用优秀"
+          "label": "信用极佳"
         },
         {
           "range": "80-89",
@@ -552,40 +520,43 @@
         {
           "range": "<60",
           "coefficient": 0.0,
-          "label": "拒贷"
+          "label": "拒绝融资"
         }
       ],
       "notes": [
-        "R：企业年度营收（万元）",
-        "K：行业系数",
-        "C：信用系数",
-        "D：未结清融资余额"
+        "R：企业年度营收（万元），由核心企业与税务数据联合校验",
+        "K：行业周转系数，依托行业资金周期设定",
+        "C：信用评分系数，由 S 模型实时更新",
+        "D：未结清融资余额，来自银行与票据节点穿透查询"
       ]
     },
     "workflowDiagram": "assets/img/contract-swimlane.svg",
     "components": [
       {
         "name": "联盟链平台",
-        "description": "基于 Hyperledger Fabric 构建联盟链，支持多角色共识与隐私通道。"
+        "description": "基于 Hyperledger Fabric 构建多节点联盟链，实现数据共享与隐私隔离。"
       },
       {
-        "name": "智能合约",
-        "description": "采用 Solidity 风格 DSL 定义授信、放款、结清流程，支持参数滚动升级。"
+        "name": "智能合约引擎",
+        "description": "使用 Solidity 开发授信、额度测算、资金划拨等规则，实现自动执行。"
       },
       {
-        "name": "数据接口",
-        "description": "API 网关与预言机对接 ERP、TMS、税务、征信等多源数据。"
+        "name": "数据接口模块",
+        "description": "API 网关联通 ERP、税务、物流及征信系统，Chainlink 预言机保障跨域数据可信。"
       },
       {
-        "name": "安全合规",
-        "description": "SM2/SM3 国密算法 + 隐私计算，实现数据最小化与合规审计。"
+        "name": "安全防护体系",
+        "description": "引入国密算法 SM2/SM3 与隐私计算，配合第三方审计确保链上数据和合约安全。"
       }
     ],
     "calculatorDefaults": {
-      "S1": 88,
-      "S2": 85,
+      "S1": 85,
+      "S2": 88,
       "S3": 82,
-      "S4": 86,
+      "prosperityBucket": ">=80",
+      "policyAddons": [
+        "sxzx_national_giant"
+      ],
       "industry": "manufacturing",
       "revenue": 320000,
       "outstanding": 18000
@@ -595,406 +566,194 @@
     "timelineSteps": [
       {
         "step": 1,
-        "title": "订单/物流上链",
-        "description": "核心企业与供应商联合提交订单数据，物流 IoT 自动写入运单轨迹，杜绝虚假贸易源头。",
+        "title": "贸易合同与物流数据上链",
+        "description": "贸易双方签署合同后上传订单哈希，物流系统自动同步运单、签收等数据，构建不可篡改的交易事实链。",
         "ledgerFields": [
           "订单哈希",
-          "SKU 列表",
-          "签收凭证"
+          "合同要素",
+          "物流轨迹哈希"
         ],
         "participants": [
           "核心企业",
           "供应商",
           "物流方"
         ],
-        "compliance": "票据与物流信息实时对账，符合《电子商务法》留痕要求。"
+        "compliance": "满足银行贷前核验真实贸易背景的要求。"
       },
       {
         "step": 2,
-        "title": "发票验真 + 电子确权",
-        "description": "税务系统回传验真结果，核心企业在链上完成电子签章确权。",
+        "title": "发票验真与电子确权",
+        "description": "连接税务发票查验平台验证票据真伪，核心企业在线使用电子签名完成应收账款确权。",
         "ledgerFields": [
-          "发票哈希",
-          "税控码",
-          "确权签章"
+          "发票查验结果",
+          "税控码哈希",
+          "电子签章记录"
         ],
         "participants": [
           "供应商",
           "核心企业",
           "税务接口"
         ],
-        "compliance": "依据《电子签名法》完成确权并固化证据链。"
+        "compliance": "符合《电子签名法》要求，确权记录具法律效力。"
       },
       {
         "step": 3,
-        "title": "生成数字债权凭证",
-        "description": "系统自动拆分可流转的债权凭证，写入唯一标识防止多次质押。",
+        "title": "生成数字债权凭证并发起融资",
+        "description": "平台生成唯一数字债权凭证，可拆分流转；供应商基于凭证一键向合作银行发起融资申请。",
         "ledgerFields": [
-          "tokenId",
-          "faceValue",
+          "数字凭证 ID",
+          "面值",
           "到期日"
         ],
         "participants": [
           "供应商",
-          "平台合约"
+          "平台智能合约"
         ],
-        "compliance": "凭证生成遵循《民法典》债权转让条款，确保唯一性。"
+        "compliance": "凭证唯一且可追溯，杜绝“一单多押”欺诈。"
       },
       {
         "step": 4,
-        "title": "融资申请发起",
-        "description": "供应商一键选择债权凭证，提交融资额度需求与用途说明。",
+        "title": "智能合约自动授信与放款",
+        "description": "智能合约校验凭证、额度池与白名单条件，实时计算额度 L 值，满足条件即刻放款，支持 T+0/T+1 到账。",
         "ledgerFields": [
-          "融资用途",
-          "额度申请",
-          "授信白名单校验"
+          "额度测算过程",
+          "白名单状态",
+          "放款指令哈希"
         ],
         "participants": [
-          "供应商",
-          "银行"
+          "合作银行",
+          "核心企业",
+          "智能合约"
         ],
-        "compliance": "用途合规检查满足监管沙盒准入要求。"
+        "compliance": "债项风控与主体授信解耦，满足监管穿透管理。"
       },
       {
         "step": 5,
-        "title": "自动授信与额度映射",
-        "description": "平台计算 S 信用评分并映射行业系数 K、信用系数 C，得到额度 L。",
-        "ledgerFields": [
-          "S 分值",
-          "K/C 参数",
-          "额度计算过程"
-        ],
-        "participants": [
-          "风控模型",
-          "银行风控"
-        ],
-        "compliance": "模型参数每季度留存，支持监管穿透式审计。"
-      },
-      {
-        "step": 6,
-        "title": "阈值校验与白名单审核",
-        "description": "结合白名单、额度池余额、异常记录进行复核，必要时触发人工干预。",
-        "ledgerFields": [
-          "白名单状态",
-          "额度池余额",
-          "风险标签"
-        ],
-        "participants": [
-          "银行",
-          "监管节点"
-        ],
-        "compliance": "超过阈值即触发二级审批，符合法规要求。"
-      },
-      {
-        "step": 7,
-        "title": "放款与资金流向存证",
-        "description": "智能合约自动放款，资金流向链上固化，支持 T+0/T+1 资金到账。",
-        "ledgerFields": [
-          "放款指令",
-          "资金账户哈希",
-          "到账回执"
-        ],
-        "participants": [
-          "银行",
-          "供应商",
-          "核心企业"
-        ],
-        "compliance": "放款记录同步至监管节点，实现穿透。"
-      },
-      {
-        "step": 8,
-        "title": "到期还款与结清",
-        "description": "到期后自动对账，更新债权状态为结清，可追溯历史操作。",
+        "title": "到期还款与信用回流",
+        "description": "核心企业按约定付款至银行监管账户，系统自动将凭证状态更新为“已结清”，沉淀企业信用资产。",
         "ledgerFields": [
           "还款流水",
-          "结清凭证",
-          "风险复核"
+          "凭证状态更新",
+          "风险复核记录"
         ],
         "participants": [
-          "银行",
           "核心企业",
+          "合作银行",
           "供应商"
         ],
-        "compliance": "符合《商业银行授信工作指引》关于贷后管理的要求。"
+        "compliance": "形成贷前-贷中-贷后闭环留痕，便于审计与再融资。"
       }
     ],
     "player": {
-      "description": "流程演示播放器展示从下单到结清的 8 个步骤，可逐步播放并查看链上写入字段与合规说明。",
-      "defaultSpeed": 1500
+      "description": "流程播放器覆盖“合同上链 → 确权发票 → 数字凭证 → 智能授信 → 结清回流”五步闭环，逐步查看链上字段和合规说明。",
+      "defaultSpeed": 1600
     }
   },
   "rolesSection": {
     "roles": {
       "core": [
         {
-          "enterpriseId": "E001",
-          "name": "华新制造",
+          "id": "CORE-01",
+          "name": "核心企业",
           "operations": [
-            "上传订单、发票、质检凭证",
-            "多维度确权应收账款",
-            "同步生产排产与交付计划"
+            "授权上传贸易合同与订单数据",
+            "在线完成应收账款电子确权",
+            "按约定将回款打入监管账户"
           ],
           "benefits": [
-            "融资到账周期 ≤3 个工作日",
-            "供应链资金占压降低 35%",
-            "核心企业信用传导至上下游"
+            "优化现金流，延长账期",
+            "稳定供应链生态",
+            "获取链上数据支撑经营决策"
           ],
           "valueMetrics": {
-            "efficiencyGain": 0.83,
-            "costReduction": 0.012,
-            "creditMultiplier": 2.1
-          }
-        },
-        {
-          "enterpriseId": "E002",
-          "name": "鼎盛重工",
-          "operations": [
-            "设置白名单供应商清单",
-            "配置智能合约阈值",
-            "审批资金流向存证"
-          ],
-          "benefits": [
-            "放款全程可追溯",
-            "白名单循环额度可视化",
-            "合规稽核时间减少 60%"
-          ],
-          "valueMetrics": {
-            "efficiencyGain": 0.78,
-            "costReduction": 0.009,
-            "creditMultiplier": 1.8
+            "efficiencyGain": 0.45,
+            "costReduction": 0.12,
+            "creditMultiplier": 2.4
           }
         }
       ],
       "sme": [
         {
-          "enterpriseId": "E004",
-          "name": "蓝桥连锁零售",
+          "id": "SME-01",
+          "name": "中小企业供应商",
           "operations": [
-            "一键提交融资申请",
-            "选择 T+1 放款产品",
-            "跟踪应收账款状态"
+            "基于数字凭证一键申请融资",
+            "管理融资账户与回款计划",
+            "维护凭证拆分与流转记录"
           ],
           "benefits": [
-            "平均融资成本降至 6.2%",
-            "订单履约数据即信用",
-            "资金回笼速度提升 3 倍"
+            "融资通过率显著提升",
+            "资金成本下降 20%-30%",
+            "T+0/T+1 到账缓解现金流压力",
+            "沉淀数字信用档案"
           ],
           "valueMetrics": {
-            "efficiencyGain": 0.7,
-            "costReduction": 0.016,
-            "creditMultiplier": 1.6
-          }
-        },
-        {
-          "enterpriseId": "E005",
-          "name": "星辉电子",
-          "operations": [
-            "上传生产工序记录",
-            "绑定物流匹配度验证",
-            "签署数字债权凭证"
-          ],
-          "benefits": [
-            "质押融资成功率 98%",
-            "库存占压降低 28%",
-            "实时掌握额度余额"
-          ],
-          "valueMetrics": {
-            "efficiencyGain": 0.68,
-            "costReduction": 0.014,
-            "creditMultiplier": 1.5
-          }
-        },
-        {
-          "enterpriseId": "E006",
-          "name": "瑞泰医疗器械",
-          "operations": [
-            "提交医械合规证明",
-            "触发智能审批路径",
-            "对接医院采购数据"
-          ],
-          "benefits": [
-            "坏账率控制在 0.6%",
-            "多渠道订单合并融资",
-            "合同更新自动同步"
-          ],
-          "valueMetrics": {
-            "efficiencyGain": 0.72,
-            "costReduction": 0.013,
-            "creditMultiplier": 1.7
-          }
-        },
-        {
-          "enterpriseId": "E007",
-          "name": "慧链数字科技",
-          "operations": [
-            "提供 IoT 设备数据",
-            "参与风控模型训练",
-            "评估算法参数"
-          ],
-          "benefits": [
-            "信用评分稳定在 88+",
-            "技术服务费收益",
-            "共享行业洞察"
-          ],
-          "valueMetrics": {
-            "efficiencyGain": 0.65,
-            "costReduction": 0.01,
-            "creditMultiplier": 1.5
-          }
-        },
-        {
-          "enterpriseId": "E009",
-          "name": "华泰轻工",
-          "operations": [
-            "对接 ERP 生产数据",
-            "维护应收账龄结构",
-            "接收放款通知"
-          ],
-          "benefits": [
-            "短票融资成本降 1.3pct",
-            "账龄结构透明",
-            "信用额度提升 18%"
-          ],
-          "valueMetrics": {
-            "efficiencyGain": 0.69,
-            "costReduction": 0.013,
-            "creditMultiplier": 1.55
-          }
-        },
-        {
-          "enterpriseId": "E010",
-          "name": "诚品供应链",
-          "operations": [
-            "整合多家核心企业订单",
-            "拆分数字债权凭证",
-            "管理回款计划"
-          ],
-          "benefits": [
-            "资金冗余环节减少 82%",
-            "流转效率提升 45%",
-            "拒贷率降至 4% 以下"
-          ],
-          "valueMetrics": {
-            "efficiencyGain": 0.75,
-            "costReduction": 0.018,
-            "creditMultiplier": 1.65
+            "efficiencyGain": 0.6,
+            "costReduction": 0.25,
+            "creditMultiplier": 1.8
           }
         }
       ],
       "bank": [
         {
-          "bankId": "B001",
-          "name": "中原银行",
-          "poolSize": 120000000,
-          "tPlusOneCoverage": 0.74,
-          "whitelist": [
-            "E001",
-            "E005",
-            "E007",
-            "E009"
-          ],
+          "id": "BANK-01",
+          "name": "合作银行",
           "operations": [
-            "实时读取信用评分",
-            "配置额度池规则",
-            "审核自动放款结果"
+            "设定白名单、额度池等合约规则",
+            "自动审批并放款，管理资金划拨",
+            "开展链上贷后监测与风险预警"
           ],
           "benefits": [
-            "授信审批时间缩短 65%",
-            "不良率降至 0.8%",
-            "风控审计留痕完整"
+            "批量获客并下沉普惠金融",
+            "不良率下降，风控成本降低 50% 以上",
+            "获取核心企业背书的优质底层资产"
           ],
           "valueMetrics": {
-            "efficiencyGain": 0.65,
-            "costReduction": 0.011,
-            "creditMultiplier": 2.4
-          }
-        },
-        {
-          "bankId": "B002",
-          "name": "豫州商业银行",
-          "poolSize": 90000000,
-          "tPlusOneCoverage": 0.68,
-          "whitelist": [
-            "E002",
-            "E004",
-            "E006",
-            "E010"
-          ],
-          "operations": [
-            "自定义智能合约条件",
-            "监测风险预警面板",
-            "对接监管穿透视图"
-          ],
-          "benefits": [
-            "批量放款自动化",
-            "合规检查成本下降 55%",
-            "联合授信模式落地"
-          ],
-          "valueMetrics": {
-            "efficiencyGain": 0.62,
-            "costReduction": 0.012,
-            "creditMultiplier": 2.0
+            "efficiencyGain": 0.55,
+            "costReduction": 0.2,
+            "creditMultiplier": 2.6
           }
         }
       ],
       "logistics": [
         {
-          "enterpriseId": "E003",
-          "name": "远航物流",
+          "id": "LOGI-01",
+          "name": "物流与仓储服务商",
           "operations": [
-            "上传运单状态",
-            "匹配核心企业仓储数据",
-            "参与智能合约见证"
+            "同步签收凭证、仓单、温控数据上链",
+            "提供异常事件实时同步",
+            "与智能合约联动触发风控提示"
           ],
           "benefits": [
-            "物流匹配度 0.96",
-            "虚假贸易识别率 98%",
-            "节点响应时间 <15 分钟"
+            "拓展数据服务收入",
+            "提升数字化协同能力",
+            "成为供应链金融可信数据源"
           ],
           "valueMetrics": {
-            "efficiencyGain": 0.6,
-            "costReduction": 0.008,
-            "creditMultiplier": 1.4
-          }
-        },
-        {
-          "enterpriseId": "E008",
-          "name": "安航冷链",
-          "operations": [
-            "同步温控轨迹",
-            "出具签收证明",
-            "反馈异常事件"
-          ],
-          "benefits": [
-            "冷链损耗率降至 2%",
-            "多温区仓储透明",
-            "准入审核一次通过率 94%"
-          ],
-          "valueMetrics": {
-            "efficiencyGain": 0.58,
-            "costReduction": 0.009,
-            "creditMultiplier": 1.35
+            "efficiencyGain": 0.4,
+            "costReduction": 0.1,
+            "creditMultiplier": 1.3
           }
         }
       ],
       "regulator": [
         {
-          "agencyId": "R001",
-          "name": "河南省地方金融监督管理局",
+          "id": "REG-01",
+          "name": "监管机构",
           "operations": [
-            "监管节点链上穿透",
-            "审批监管沙盒试点",
-            "月度风险复盘"
+            "通过监管节点实时查看匿名化统计",
+            "跟踪资金流向与风险预警指标",
+            "结合沙盒机制评估创新模式合规性"
           ],
           "benefits": [
-            "风险提示响应 ≤30 分钟",
-            "政策执行进度实时量化",
-            "双链融合样板可复制"
+            "提升穿透式监管效率",
+            "掌握真实产业运行数据",
+            "保障普惠金融政策落地"
           ],
           "valueMetrics": {
-            "efficiencyGain": 0.55,
-            "costReduction": 0.007,
-            "creditMultiplier": 1.3
+            "efficiencyGain": 0.35,
+            "costReduction": 0.08,
+            "creditMultiplier": 1.2
           }
         }
       ]
@@ -1002,15 +761,15 @@
     "synergy": [
       {
         "name": "信用乘数效应",
-        "description": "核心企业信用穿透上下游，供应商融资成功率提升 45%。"
+        "description": "核心企业信用通过数字凭证多级传导，帮助末端供应商获得与链主同步的融资条件。"
       },
       {
         "name": "数据网络效应",
-        "description": "链上多源数据共享，风控模型持续进化，识别虚假贸易 ≥98%。"
+        "description": "链上多维数据越丰富，智能风控越精准，预警更及时。"
       },
       {
         "name": "流程协同效应",
-        "description": "多角色同屏协作，流程节点自动触发通知，实现端到端监控。"
+        "description": "合同、物流、资金在同一平台协作，消除信息孤岛，实现端到端自动化。"
       }
     ]
   },
@@ -1143,129 +902,194 @@
   "risk": {
     "matrix": [
       {
-        "id": "business",
-        "category": "业务风险",
-        "probability": 0.35,
-        "loss": 0.7,
-        "score": 0.245,
-        "grade": "高",
-        "priority": 1
+        "type": "技术",
+        "prob": 0.05,
+        "loss": 0.75,
+        "level": "中高"
       },
       {
-        "id": "technical",
-        "category": "技术风险",
-        "probability": 0.2,
-        "loss": 0.6,
-        "score": 0.12,
-        "grade": "中",
-        "priority": 2
+        "type": "业务",
+        "prob": 0.08,
+        "loss": 0.35,
+        "level": "中"
       },
       {
-        "id": "cooperation",
-        "category": "合作风险",
-        "probability": 0.18,
-        "loss": 0.5,
-        "score": 0.09,
-        "grade": "中",
-        "priority": 3
+        "type": "合作",
+        "prob": 0.03,
+        "loss": 1.5,
+        "level": "高"
       },
       {
-        "id": "compliance",
-        "category": "合规风险",
-        "probability": 0.15,
-        "loss": 0.65,
-        "score": 0.098,
-        "grade": "中",
-        "priority": 2
+        "type": "合规",
+        "prob": 0.02,
+        "loss": 0.4,
+        "level": "中"
       }
     ],
     "detail": {
-      "business": {
-        "issues": [
-          "虚假贸易",
-          "违约风险"
-        ],
-        "strategies": [
-          "政务/物流数据覆盖 ≥95%",
-          "S<70 自动追加 ≥30% 担保",
-          "单笔融资额度上限、二次质押防范"
-        ],
-        "triggers": [
-          "链上风控模型预警",
-          "供应链关系变更"
-        ]
-      },
       "technical": {
         "issues": [
-          "链上数据泄露",
-          "合约漏洞"
+          {
+            "text": "链上数据泄露"
+          },
+          {
+            "text": "智能合约逻辑漏洞"
+          }
         ],
         "strategies": [
-          "第三方审计季度更新",
-          "实时安全扫描 <10 分钟",
-          "年度安全预算 15%"
+          {
+            "text": "年度安全审计预算占比",
+            "value": 0.15,
+            "unit": "budgetShare"
+          },
+          {
+            "text": "第三方安全审计频率",
+            "frequency": "季度"
+          },
+          {
+            "text": "实时监测工具响应时间",
+            "value": 10,
+            "unit": "minute"
+          }
         ],
         "triggers": [
-          "检测异常调用",
-          "合约升级前后"
+          {
+            "text": "安全审计发现高危问题"
+          },
+          {
+            "text": "监控到异常调用或交易峰值"
+          }
+        ]
+      },
+      "business": {
+        "issues": [
+          {
+            "text": "虚假贸易背景"
+          },
+          {
+            "text": "企业违约或履约不足"
+          }
+        ],
+        "strategies": [
+          {
+            "text": "政务与物流数据覆盖率",
+            "value": 0.95,
+            "unit": "coverage"
+          },
+          {
+            "text": "低信用企业追加担保比例",
+            "value": 0.3,
+            "unit": "guarantee"
+          },
+          {
+            "text": "单户单笔融资上限",
+            "value": 100,
+            "unit": "tenThousand"
+          }
+        ],
+        "triggers": [
+          {
+            "text": "链上风控模型预警"
+          },
+          {
+            "text": "供应链关系或账期异常"
+          }
         ]
       },
       "cooperation": {
         "issues": [
-          "合作方退出",
-          "额度池不足"
+          {
+            "text": "合作银行或核心企业退出"
+          },
+          {
+            "text": "系统对接成本过高"
+          }
         ],
         "strategies": [
-          "≥3 家银行联合签约",
-          "≥5 家核心企业并行接入",
-          "2000 万应急资金池"
+          {
+            "text": "签约银行数量",
+            "value": 3,
+            "unit": "count"
+          },
+          {
+            "text": "签约核心企业数量",
+            "value": 5,
+            "unit": "count"
+          },
+          {
+            "text": "应急资金池规模",
+            "value": 20000000,
+            "unit": "yuan"
+          }
         ],
         "triggers": [
-          "合作方 SLA 违约",
-          "额度使用率 >90%"
+          {
+            "text": "合作方 SLA 指标异常"
+          },
+          {
+            "text": "业务量持续低于目标"
+          }
         ]
       },
       "compliance": {
         "issues": [
-          "凭证法律地位",
-          "隐私与监管边界"
+          {
+            "text": "数字债权凭证法律地位"
+          },
+          {
+            "text": "数据隐私与跨境监管边界"
+          }
         ],
         "strategies": [
-          "民法典+电子签名法双重背书",
-          "数据最小化（仅哈希与关键字段）",
-          "技术服务方不触资/不担保",
-          "监管沙盒与专线节点"
+          {
+            "text": "依据《民法典》《电子签名法》制定标准合同"
+          },
+          {
+            "text": "坚持数据最小化，仅上链哈希与关键字段"
+          },
+          {
+            "text": "保持技术服务方定位，不触资、不担保，开放监管节点"
+          }
         ],
         "triggers": [
-          "法规更新",
-          "跨境数据调用"
+          {
+            "text": "监管政策调整或新规发布"
+          },
+          {
+            "text": "跨境数据调用或司法取证需求"
+          }
         ]
       }
     },
     "controls": {
       "daily": {
-        "title": "日常监测",
-        "sla": "≤30 分钟",
+        "title": "日常监测层",
+        "sla": {
+          "value": 30,
+          "unit": "minute"
+        },
         "actions": [
-          "链上节点健康巡检",
-          "风控预警推送",
-          "异常资金自动冻结"
+          "搭建风险预警系统实时监测违约率与异常交易",
+          "安全与风控团队联合响应，10 分钟内完成初步处置",
+          "异常流程自动冻结待复核"
         ]
       },
       "monthly": {
-        "title": "月度复盘",
+        "title": "定期复盘层",
+        "cycle": "monthly",
         "actions": [
-          "政策对齐工作坊",
-          "风险案例复盘",
-          "风控参数校准"
+          "每月更新各类风险概率与损失测算",
+          "召开合作方联席会复盘风险案例",
+          "根据复盘结果调整授信策略与模型参数"
         ]
       },
       "annual": {
-        "title": "年度第三方评估",
+        "title": "第三方验证层",
+        "cycle": "annual",
         "actions": [
-          "独立审计报告",
-          "安全渗透测试",
-          "合规指标复核"
+          "邀请律所、安全公司开展年度评估",
+          "验证数字凭证与合约执行的合规性",
+          "形成整改清单并跟踪闭环"
         ]
       }
     }
@@ -1285,8 +1109,7 @@
         "2025Q3"
       ],
       "regions": [
-        "河南",
-        "山东"
+        "河南"
       ],
       "metrics": [
         "totalAmount",
@@ -1358,38 +1181,6 @@
         "loanCount": 52,
         "alerts": 1,
         "region": "河南"
-      },
-      {
-        "quarter": "2025Q2",
-        "industry": "retail",
-        "totalAmount": 108000000,
-        "loanCount": 104,
-        "alerts": 2,
-        "region": "山东"
-      },
-      {
-        "quarter": "2025Q2",
-        "industry": "logistics",
-        "totalAmount": 94000000,
-        "loanCount": 88,
-        "alerts": 1,
-        "region": "山东"
-      },
-      {
-        "quarter": "2025Q3",
-        "industry": "manufacturing",
-        "totalAmount": 360000000,
-        "loanCount": 212,
-        "alerts": 2,
-        "region": "河南"
-      },
-      {
-        "quarter": "2025Q3",
-        "industry": "retail",
-        "totalAmount": 126000000,
-        "loanCount": 118,
-        "alerts": 1,
-        "region": "山东"
       }
     ],
     "heatmap": {
@@ -1410,28 +1201,26 @@
     "projection": [
       {
         "year": 2024,
-        "serviceEnterprises": 500,
-        "financingAmount": 50,
-        "unit": "亿元"
+        "enterprises": 500,
+        "financing": 50
       },
       {
         "year": 2025,
-        "serviceEnterprises": 1500,
-        "financingAmount": 150,
-        "unit": "亿元"
+        "enterprises": 1500,
+        "financing": 150
       },
       {
         "year": 2026,
-        "serviceEnterprises": 3000,
-        "financingAmount": 300,
-        "unit": "亿元"
+        "enterprises": 3000,
+        "financing": 300
       }
     ],
     "costSavings": {
-      "enterprise": 150000000,
+      "enterprise": 1500000000,
       "institution": {
         "manualReduction": 0.6,
-        "paperCost": 5000000
+        "paperCost": 5000000,
+        "automationSaving": 8000000
       }
     },
     "industryImpact": {
@@ -1440,8 +1229,8 @@
       "access": 0.4
     },
     "scalability": [
-      "双链融合模式标准化输出",
-      "可复制推广至跨境贸易"
+      "打造可复制的“双链融合”贸易融资标准方案",
+      "支持跨区域、跨境贸易场景的信用协同与风控"
     ]
   },
   "team": {
@@ -1460,9 +1249,11 @@
       }
     ],
     "school": "河南大学",
-    "advisors": [],
-    "thanks": "感谢区块链联盟、合作银行与监管单位的指导",
-    "license": "仅用于技术演示，示例数据非真实业务"
+    "advisors": [
+      "指导老师："
+    ],
+    "thanks": "感谢区块链联盟、合作银行与监管单位的协同支持",
+    "license": "仅用于技术演示，示例数据依据最新方案重构，不代表真实业务。"
   },
   "dataAssets": {
     "enterprises": [
@@ -3548,44 +3339,43 @@
       }
     ],
     "kpi": {
-      "cycleCompression": {
-        "traditional": 18,
-        "optimized": 3,
-        "improvement": 0.83
+      "cycleDays": {
+        "before": 18,
+        "after": 3
       },
-      "tPlusOneCoverage": {
-        "target": 0.7,
-        "current": 0.72
+      "tPlusOne": {
+        "before": 0.35,
+        "after": 0.7
       },
-      "badDebtRate": {
-        "baseline": 0.031,
-        "current": 0.008
+      "badDebt": {
+        "before": 0.031,
+        "after": 0.008
       },
-      "fraudDetectionAccuracy": {
-        "target": 0.98,
-        "current": 0.981
+      "fraudDetect": {
+        "before": 0.88,
+        "after": 0.98
       }
     },
     "financeCycle": [
       {
-        "quarter": "2024Q4",
+        "quarter": "2024Q1",
         "traditional": 18,
-        "blockchain": 7
+        "dual": 6
       },
       {
-        "quarter": "2025Q1",
+        "quarter": "2024Q2",
         "traditional": 16,
-        "blockchain": 5
+        "dual": 5
       },
       {
-        "quarter": "2025Q2",
+        "quarter": "2024Q3",
         "traditional": 15,
-        "blockchain": 4
+        "dual": 4
       },
       {
-        "quarter": "2025Q3",
+        "quarter": "2024Q4",
         "traditional": 14,
-        "blockchain": 3
+        "dual": 3
       }
     ],
     "costStructure": {
@@ -3593,18 +3383,18 @@
         "人工审核",
         "纸质单据",
         "对账沟通",
-        "资金占压成本"
+        "资金占压"
       ],
       "before": [
         100,
         45,
-        65,
+        60,
         120
       ],
       "after": [
         40,
-        5,
-        20,
+        10,
+        18,
         70
       ]
     },
@@ -3616,16 +3406,16 @@
         "回款"
       ],
       "baseline": [
+        0.3,
         0.35,
         0.4,
-        0.45,
-        0.3
+        0.25
       ],
       "optimized": [
+        0.82,
         0.85,
-        0.88,
         0.9,
-        0.82
+        0.8
       ]
     },
     "cycleDays": {
@@ -3666,6 +3456,7 @@
   }
 }
   </script>
+  <script type="module" src="assets/js/app.js"></script>
   <script type="module" src="assets/js/app.js"></script>
 </body>
 </html>
