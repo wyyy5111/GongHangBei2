@@ -1,0 +1,3565 @@
+{
+  "meta": {
+    "titleZh": "区块链与供应链双链融合的贸易融资平台",
+    "titleEn": "Dual-Chain Trade Finance Platform",
+    "scenario": "应收账款融资示例场景",
+    "team": [
+      "马琬淳",
+      "李沛柯",
+      "汪文吉"
+    ],
+    "school": "河南大学",
+    "slogan": "双链融合·可信融资 · 数据即信用",
+    "timestamp": "2025-08",
+    "printButtonText": "导出为 PDF（打印样式）"
+  },
+  "navigation": [
+    {
+      "id": "overview",
+      "label": "首页总览",
+      "labelEn": "Overview"
+    },
+    {
+      "id": "background",
+      "label": "项目背景与意义",
+      "labelEn": "Background"
+    },
+    {
+      "id": "objectives",
+      "label": "项目目标",
+      "labelEn": "Objectives"
+    },
+    {
+      "id": "technology",
+      "label": "核心技术架构",
+      "labelEn": "Technology"
+    },
+    {
+      "id": "business",
+      "label": "核心业务流程",
+      "labelEn": "Process"
+    },
+    {
+      "id": "roles",
+      "label": "多方角色与价值",
+      "labelEn": "Roles"
+    },
+    {
+      "id": "implementation",
+      "label": "项目实施计划",
+      "labelEn": "Implementation"
+    },
+    {
+      "id": "risk",
+      "label": "风险评估与策略",
+      "labelEn": "Risk"
+    },
+    {
+      "id": "outcomes",
+      "label": "预期成果与效益",
+      "labelEn": "Outcomes"
+    },
+    {
+      "id": "team",
+      "label": "团队与鸣谢",
+      "labelEn": "Team"
+    }
+  ],
+  "overview": {
+    "kpiFlip": [
+      {
+        "id": "cycle",
+        "label": "周期压缩",
+        "unit": "工作日",
+        "baseline": 18,
+        "current": 3,
+        "improvement": 0.83,
+        "description": "传统 18 → ≤3 个工作日"
+      },
+      {
+        "id": "tplus",
+        "label": "T+1 放款覆盖率",
+        "unit": "",
+        "baseline": 0.52,
+        "current": 0.7,
+        "target": 0.7,
+        "description": "中期目标 ≥70%"
+      },
+      {
+        "id": "badDebt",
+        "label": "坏账率",
+        "unit": "",
+        "baseline": 0.031,
+        "current": 0.008,
+        "improvement": 0.742,
+        "description": "较 3.1% 下降 ≈74.2%"
+      },
+      {
+        "id": "fraud",
+        "label": "虚假贸易识别准确率",
+        "unit": "",
+        "baseline": 0.9,
+        "current": 0.98,
+        "target": 0.98,
+        "description": "中期目标 ≥98%"
+      }
+    ],
+    "ctaButtons": [
+      {
+        "id": "action-flow",
+        "label": "流程演示",
+        "targetTab": "business"
+      },
+      {
+        "id": "action-calculator",
+        "label": "S/L 计算器",
+        "targetTab": "technology"
+      },
+      {
+        "id": "action-regulator",
+        "label": "监管穿透视图",
+        "targetTab": "regulatory"
+      },
+      {
+        "id": "action-risk",
+        "label": "风险与效益",
+        "targetTab": "risk"
+      }
+    ],
+    "threeFlow": {
+      "title": "三流合一：信息流·物流·资金流",
+      "description": "联盟链让订单、物流、资金三流实时对齐，“数据即信用”为每一笔融资提供可信背书。",
+      "poster": "assets/img/triple-flow.svg",
+      "flows": [
+        {
+          "name": "信息流",
+          "highlights": [
+            "核心企业 ERP",
+            "供应商系统",
+            "监管节点"
+          ]
+        },
+        {
+          "name": "物流",
+          "highlights": [
+            "IoT 追踪",
+            "冷链监测",
+            "签收留痕"
+          ]
+        },
+        {
+          "name": "资金流",
+          "highlights": [
+            "额度池",
+            "白名单授信",
+            "自动放款"
+          ]
+        }
+      ]
+    }
+  },
+  "background": {
+    "painPoints": [
+      {
+        "id": "efficiency",
+        "title": "流程效率低",
+        "description": "纸质核验与多头确认导致放款周期长达 18 个工作日。",
+        "impact": "供应链资金占压与中小企业错失交易机会。"
+      },
+      {
+        "id": "information",
+        "title": "信息不对称",
+        "description": "贸易信息散落在 ERP、物流、发票等系统，真实性难以交叉验证。",
+        "impact": "金融机构难以精准评估信用，导致融资门槛高。"
+      },
+      {
+        "id": "digitalRisk",
+        "title": "数字化风险",
+        "description": "孤立的数字化系统存在数据孤岛，权限控制与合规稽核能力不足。",
+        "impact": "流程留痕不完整，监管部门缺乏穿透视角。"
+      }
+    ],
+    "blockchainAdvantage": {
+      "dimensions": [
+        "流程透明度",
+        "履约可信度",
+        "融资效率",
+        "风险预警",
+        "合规支撑"
+      ],
+      "traditional": [
+        46,
+        52,
+        40,
+        48,
+        55
+      ],
+      "blockchain": [
+        92,
+        90,
+        83,
+        88,
+        91
+      ],
+      "notes": "联盟链协同实现信息流、物流、资金流合一。"
+    },
+    "policyTimeline": [
+      {
+        "date": "2018-09",
+        "title": "人民银行《金融科技发展规划（2019-2021年）》",
+        "summary": "明确区块链是金融科技重点方向，为贸易融资数字化奠定制度基础。"
+      },
+      {
+        "date": "2020-04",
+        "title": "国家发改委《区块链推动实体经济发展行动计划》",
+        "summary": "提出区块链与供应链金融场景深度融合，强化政务与金融数据共享。"
+      },
+      {
+        "date": "2021-06",
+        "title": "人民银行、银保监会《供应链金融创新与应用指引》",
+        "summary": "强调应收账款融资要实现穿透式管理与风险可控。"
+      },
+      {
+        "date": "2022-12",
+        "title": "河南省数字经济发展规划",
+        "summary": "建设“豫贸链”等区域性区块链平台，支持实体企业融资。"
+      },
+      {
+        "date": "2023-07",
+        "title": "《关于推动应收账款融资服务实体经济的指导意见》",
+        "summary": "提出应收账款平台要加强多方数据共享、强化虚假贸易识别。"
+      },
+      {
+        "date": "2024-10",
+        "title": "人民银行 2024 年金融科技工作要点",
+        "summary": "推动区块链、隐私计算在贸易融资中的综合应用，强化监管穿透。"
+      }
+    ],
+    "scenario": {
+      "title": "以应收账款融资为例",
+      "description": "核心企业订单驱动的应收账款资产，在联盟链上生成可拆分、可流转的数字债权凭证，实现可信融资。",
+      "bullets": [
+        "应收账款全生命周期数字化：下单、发货、验真、确权、融资、还款",
+        "供应链资金周转从 18 天压缩至 ≤3 天，实现 T+0/T+1 放款",
+        "智能合约驱动自动授信、额度校验与资金流向存证"
+      ],
+      "diagram": "assets/img/receivable-scenario.svg"
+    }
+  },
+  "objectives": {
+    "phases": [
+      {
+        "id": "shortTerm",
+        "label": "短期（试点阶段）",
+        "metrics": [
+          {
+            "metric": "放款周期",
+            "baseline": 18,
+            "target": 3,
+            "unit": "工作日",
+            "category": "efficiency"
+          },
+          {
+            "metric": "24 小时内初审占比",
+            "baseline": 0.35,
+            "target": 0.8,
+            "unit": "",
+            "category": "efficiency"
+          },
+          {
+            "metric": "跨境融资周期",
+            "baseline": 50,
+            "target": 10,
+            "unit": "工作日",
+            "category": "efficiency"
+          },
+          {
+            "metric": "坏账率",
+            "baseline": 0.031,
+            "target": 0.008,
+            "unit": "",
+            "category": "risk"
+          },
+          {
+            "metric": "风险初判时长",
+            "baseline": 24,
+            "target": 4,
+            "unit": "小时",
+            "category": "risk"
+          },
+          {
+            "metric": "误判率",
+            "baseline": 0.05,
+            "target": 0.02,
+            "unit": "",
+            "category": "risk"
+          },
+          {
+            "metric": "综合融资成本",
+            "baseline": 0.085,
+            "target": 0.065,
+            "unit": "费率",
+            "category": "cost"
+          },
+          {
+            "metric": "冗余环节消除率",
+            "baseline": 0.2,
+            "target": 0.8,
+            "unit": "",
+            "category": "cost"
+          },
+          {
+            "metric": "利率优惠覆盖率",
+            "baseline": 0.28,
+            "target": 0.55,
+            "unit": "",
+            "category": "cost"
+          }
+        ]
+      },
+      {
+        "id": "midTerm",
+        "label": "中期（规模化阶段）",
+        "metrics": [
+          {
+            "metric": "放款周期",
+            "baseline": 18,
+            "target": 2,
+            "unit": "工作日",
+            "category": "efficiency"
+          },
+          {
+            "metric": "24 小时内初审占比",
+            "baseline": 0.35,
+            "target": 0.85,
+            "unit": "",
+            "category": "efficiency"
+          },
+          {
+            "metric": "跨境融资周期",
+            "baseline": 50,
+            "target": 8,
+            "unit": "工作日",
+            "category": "efficiency"
+          },
+          {
+            "metric": "坏账率",
+            "baseline": 0.031,
+            "target": 0.007,
+            "unit": "",
+            "category": "risk"
+          },
+          {
+            "metric": "风险初判时长",
+            "baseline": 24,
+            "target": 3,
+            "unit": "小时",
+            "category": "risk"
+          },
+          {
+            "metric": "误判率",
+            "baseline": 0.05,
+            "target": 0.015,
+            "unit": "",
+            "category": "risk"
+          },
+          {
+            "metric": "综合融资成本",
+            "baseline": 0.085,
+            "target": 0.055,
+            "unit": "费率",
+            "category": "cost"
+          },
+          {
+            "metric": "冗余环节消除率",
+            "baseline": 0.2,
+            "target": 0.82,
+            "unit": "",
+            "category": "cost"
+          },
+          {
+            "metric": "利率优惠覆盖率",
+            "baseline": 0.28,
+            "target": 0.6,
+            "unit": "",
+            "category": "cost"
+          }
+        ]
+      }
+    ],
+    "warningRules": {
+      "deviationThreshold": 0.1,
+      "message": "偏差超过 10% 时，自动触发分析并在 3 个工作日内提交优化方案"
+    },
+    "rollingBadge": {
+      "label": "滚动迭代",
+      "description": "每季度更新合约与风控参数"
+    }
+  },
+  "technology": {
+    "architectureDiagram": "assets/img/dual-chain-architecture.svg",
+    "scoreModel": {
+      "formula": "S = 0.3×S1 + 0.4×S2 + 0.2×S3 + 0.1×S4",
+      "weights": {
+        "S1": 0.3,
+        "S2": 0.4,
+        "S3": 0.2,
+        "S4": 0.1
+      },
+      "dimensions": [
+        {
+          "id": "S1",
+          "name": "基础资质",
+          "items": [
+            "注册资本",
+            "成立年限",
+            "征信扣分",
+            "诉讼扣分"
+          ],
+          "note": "上限 50/15 + 扣分项"
+        },
+        {
+          "id": "S2",
+          "name": "履约表现",
+          "items": [
+            "订单完成率",
+            "确权率",
+            "物流匹配度"
+          ],
+          "note": "30/30/40 权重"
+        },
+        {
+          "id": "S3",
+          "name": "历史融资",
+          "items": [
+            "还款率",
+            "用途合规",
+            "申请频次"
+          ],
+          "note": "50/30/20 权重"
+        },
+        {
+          "id": "S4",
+          "name": "行业适配",
+          "items": [
+            "行业景气度",
+            "政策扶持"
+          ],
+          "note": "各 50"
+        }
+      ]
+    },
+    "limitModel": {
+      "formula": "L = R × K × C ? D",
+      "kFactors": {
+        "manufacturing": 0.3,
+        "retail": 0.2,
+        "logistics": 0.25,
+        "it": 0.35
+      },
+      "creditBands": [
+        {
+          "range": ">=90",
+          "coefficient": 1.2,
+          "label": "信用优秀"
+        },
+        {
+          "range": "80-89",
+          "coefficient": 1.0,
+          "label": "信用良好"
+        },
+        {
+          "range": "70-79",
+          "coefficient": 0.8,
+          "label": "信用稳健"
+        },
+        {
+          "range": "60-69",
+          "coefficient": 0.5,
+          "label": "需重点关注"
+        },
+        {
+          "range": "<60",
+          "coefficient": 0.0,
+          "label": "拒贷"
+        }
+      ],
+      "notes": [
+        "R：企业年度营收（万元）",
+        "K：行业系数",
+        "C：信用系数",
+        "D：未结清融资余额"
+      ]
+    },
+    "workflowDiagram": "assets/img/contract-swimlane.svg",
+    "components": [
+      {
+        "name": "联盟链平台",
+        "description": "基于 Hyperledger Fabric 构建联盟链，支持多角色共识与隐私通道。"
+      },
+      {
+        "name": "智能合约",
+        "description": "采用 Solidity 风格 DSL 定义授信、放款、结清流程，支持参数滚动升级。"
+      },
+      {
+        "name": "数据接口",
+        "description": "API 网关与预言机对接 ERP、TMS、税务、征信等多源数据。"
+      },
+      {
+        "name": "安全合规",
+        "description": "SM2/SM3 国密算法 + 隐私计算，实现数据最小化与合规审计。"
+      }
+    ],
+    "calculatorDefaults": {
+      "S1": 88,
+      "S2": 85,
+      "S3": 82,
+      "S4": 86,
+      "industry": "manufacturing",
+      "revenue": 320000,
+      "outstanding": 18000
+    }
+  },
+  "businessFlow": {
+    "timelineSteps": [
+      {
+        "step": 1,
+        "title": "订单/物流上链",
+        "description": "核心企业与供应商联合提交订单数据，物流 IoT 自动写入运单轨迹，杜绝虚假贸易源头。",
+        "ledgerFields": [
+          "订单哈希",
+          "SKU 列表",
+          "签收凭证"
+        ],
+        "participants": [
+          "核心企业",
+          "供应商",
+          "物流方"
+        ],
+        "compliance": "票据与物流信息实时对账，符合《电子商务法》留痕要求。"
+      },
+      {
+        "step": 2,
+        "title": "发票验真 + 电子确权",
+        "description": "税务系统回传验真结果，核心企业在链上完成电子签章确权。",
+        "ledgerFields": [
+          "发票哈希",
+          "税控码",
+          "确权签章"
+        ],
+        "participants": [
+          "供应商",
+          "核心企业",
+          "税务接口"
+        ],
+        "compliance": "依据《电子签名法》完成确权并固化证据链。"
+      },
+      {
+        "step": 3,
+        "title": "生成数字债权凭证",
+        "description": "系统自动拆分可流转的债权凭证，写入唯一标识防止多次质押。",
+        "ledgerFields": [
+          "tokenId",
+          "faceValue",
+          "到期日"
+        ],
+        "participants": [
+          "供应商",
+          "平台合约"
+        ],
+        "compliance": "凭证生成遵循《民法典》债权转让条款，确保唯一性。"
+      },
+      {
+        "step": 4,
+        "title": "融资申请发起",
+        "description": "供应商一键选择债权凭证，提交融资额度需求与用途说明。",
+        "ledgerFields": [
+          "融资用途",
+          "额度申请",
+          "授信白名单校验"
+        ],
+        "participants": [
+          "供应商",
+          "银行"
+        ],
+        "compliance": "用途合规检查满足监管沙盒准入要求。"
+      },
+      {
+        "step": 5,
+        "title": "自动授信与额度映射",
+        "description": "平台计算 S 信用评分并映射行业系数 K、信用系数 C，得到额度 L。",
+        "ledgerFields": [
+          "S 分值",
+          "K/C 参数",
+          "额度计算过程"
+        ],
+        "participants": [
+          "风控模型",
+          "银行风控"
+        ],
+        "compliance": "模型参数每季度留存，支持监管穿透式审计。"
+      },
+      {
+        "step": 6,
+        "title": "阈值校验与白名单审核",
+        "description": "结合白名单、额度池余额、异常记录进行复核，必要时触发人工干预。",
+        "ledgerFields": [
+          "白名单状态",
+          "额度池余额",
+          "风险标签"
+        ],
+        "participants": [
+          "银行",
+          "监管节点"
+        ],
+        "compliance": "超过阈值即触发二级审批，符合法规要求。"
+      },
+      {
+        "step": 7,
+        "title": "放款与资金流向存证",
+        "description": "智能合约自动放款，资金流向链上固化，支持 T+0/T+1 资金到账。",
+        "ledgerFields": [
+          "放款指令",
+          "资金账户哈希",
+          "到账回执"
+        ],
+        "participants": [
+          "银行",
+          "供应商",
+          "核心企业"
+        ],
+        "compliance": "放款记录同步至监管节点，实现穿透。"
+      },
+      {
+        "step": 8,
+        "title": "到期还款与结清",
+        "description": "到期后自动对账，更新债权状态为结清，可追溯历史操作。",
+        "ledgerFields": [
+          "还款流水",
+          "结清凭证",
+          "风险复核"
+        ],
+        "participants": [
+          "银行",
+          "核心企业",
+          "供应商"
+        ],
+        "compliance": "符合《商业银行授信工作指引》关于贷后管理的要求。"
+      }
+    ],
+    "player": {
+      "description": "流程演示播放器展示从下单到结清的 8 个步骤，可逐步播放并查看链上写入字段与合规说明。",
+      "defaultSpeed": 1500
+    }
+  },
+  "rolesSection": {
+    "roles": {
+      "core": [
+        {
+          "enterpriseId": "E001",
+          "name": "华新制造",
+          "operations": [
+            "上传订单、发票、质检凭证",
+            "多维度确权应收账款",
+            "同步生产排产与交付计划"
+          ],
+          "benefits": [
+            "融资到账周期 ≤3 个工作日",
+            "供应链资金占压降低 35%",
+            "核心企业信用传导至上下游"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.83,
+            "costReduction": 0.012,
+            "creditMultiplier": 2.1
+          }
+        },
+        {
+          "enterpriseId": "E002",
+          "name": "鼎盛重工",
+          "operations": [
+            "设置白名单供应商清单",
+            "配置智能合约阈值",
+            "审批资金流向存证"
+          ],
+          "benefits": [
+            "放款全程可追溯",
+            "白名单循环额度可视化",
+            "合规稽核时间减少 60%"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.78,
+            "costReduction": 0.009,
+            "creditMultiplier": 1.8
+          }
+        }
+      ],
+      "sme": [
+        {
+          "enterpriseId": "E004",
+          "name": "蓝桥连锁零售",
+          "operations": [
+            "一键提交融资申请",
+            "选择 T+1 放款产品",
+            "跟踪应收账款状态"
+          ],
+          "benefits": [
+            "平均融资成本降至 6.2%",
+            "订单履约数据即信用",
+            "资金回笼速度提升 3 倍"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.7,
+            "costReduction": 0.016,
+            "creditMultiplier": 1.6
+          }
+        },
+        {
+          "enterpriseId": "E005",
+          "name": "星辉电子",
+          "operations": [
+            "上传生产工序记录",
+            "绑定物流匹配度验证",
+            "签署数字债权凭证"
+          ],
+          "benefits": [
+            "质押融资成功率 98%",
+            "库存占压降低 28%",
+            "实时掌握额度余额"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.68,
+            "costReduction": 0.014,
+            "creditMultiplier": 1.5
+          }
+        },
+        {
+          "enterpriseId": "E006",
+          "name": "瑞泰医疗器械",
+          "operations": [
+            "提交医械合规证明",
+            "触发智能审批路径",
+            "对接医院采购数据"
+          ],
+          "benefits": [
+            "坏账率控制在 0.6%",
+            "多渠道订单合并融资",
+            "合同更新自动同步"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.72,
+            "costReduction": 0.013,
+            "creditMultiplier": 1.7
+          }
+        },
+        {
+          "enterpriseId": "E007",
+          "name": "慧链数字科技",
+          "operations": [
+            "提供 IoT 设备数据",
+            "参与风控模型训练",
+            "评估算法参数"
+          ],
+          "benefits": [
+            "信用评分稳定在 88+",
+            "技术服务费收益",
+            "共享行业洞察"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.65,
+            "costReduction": 0.01,
+            "creditMultiplier": 1.5
+          }
+        },
+        {
+          "enterpriseId": "E009",
+          "name": "华泰轻工",
+          "operations": [
+            "对接 ERP 生产数据",
+            "维护应收账龄结构",
+            "接收放款通知"
+          ],
+          "benefits": [
+            "短票融资成本降 1.3pct",
+            "账龄结构透明",
+            "信用额度提升 18%"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.69,
+            "costReduction": 0.013,
+            "creditMultiplier": 1.55
+          }
+        },
+        {
+          "enterpriseId": "E010",
+          "name": "诚品供应链",
+          "operations": [
+            "整合多家核心企业订单",
+            "拆分数字债权凭证",
+            "管理回款计划"
+          ],
+          "benefits": [
+            "资金冗余环节减少 82%",
+            "流转效率提升 45%",
+            "拒贷率降至 4% 以下"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.75,
+            "costReduction": 0.018,
+            "creditMultiplier": 1.65
+          }
+        }
+      ],
+      "bank": [
+        {
+          "bankId": "B001",
+          "name": "中原银行",
+          "poolSize": 120000000,
+          "tPlusOneCoverage": 0.74,
+          "whitelist": [
+            "E001",
+            "E005",
+            "E007",
+            "E009"
+          ],
+          "operations": [
+            "实时读取信用评分",
+            "配置额度池规则",
+            "审核自动放款结果"
+          ],
+          "benefits": [
+            "授信审批时间缩短 65%",
+            "不良率降至 0.8%",
+            "风控审计留痕完整"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.65,
+            "costReduction": 0.011,
+            "creditMultiplier": 2.4
+          }
+        },
+        {
+          "bankId": "B002",
+          "name": "豫州商业银行",
+          "poolSize": 90000000,
+          "tPlusOneCoverage": 0.68,
+          "whitelist": [
+            "E002",
+            "E004",
+            "E006",
+            "E010"
+          ],
+          "operations": [
+            "自定义智能合约条件",
+            "监测风险预警面板",
+            "对接监管穿透视图"
+          ],
+          "benefits": [
+            "批量放款自动化",
+            "合规检查成本下降 55%",
+            "联合授信模式落地"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.62,
+            "costReduction": 0.012,
+            "creditMultiplier": 2.0
+          }
+        }
+      ],
+      "logistics": [
+        {
+          "enterpriseId": "E003",
+          "name": "远航物流",
+          "operations": [
+            "上传运单状态",
+            "匹配核心企业仓储数据",
+            "参与智能合约见证"
+          ],
+          "benefits": [
+            "物流匹配度 0.96",
+            "虚假贸易识别率 98%",
+            "节点响应时间 <15 分钟"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.6,
+            "costReduction": 0.008,
+            "creditMultiplier": 1.4
+          }
+        },
+        {
+          "enterpriseId": "E008",
+          "name": "安航冷链",
+          "operations": [
+            "同步温控轨迹",
+            "出具签收证明",
+            "反馈异常事件"
+          ],
+          "benefits": [
+            "冷链损耗率降至 2%",
+            "多温区仓储透明",
+            "准入审核一次通过率 94%"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.58,
+            "costReduction": 0.009,
+            "creditMultiplier": 1.35
+          }
+        }
+      ],
+      "regulator": [
+        {
+          "agencyId": "R001",
+          "name": "河南省地方金融监督管理局",
+          "operations": [
+            "监管节点链上穿透",
+            "审批监管沙盒试点",
+            "月度风险复盘"
+          ],
+          "benefits": [
+            "风险提示响应 ≤30 分钟",
+            "政策执行进度实时量化",
+            "双链融合样板可复制"
+          ],
+          "valueMetrics": {
+            "efficiencyGain": 0.55,
+            "costReduction": 0.007,
+            "creditMultiplier": 1.3
+          }
+        }
+      ]
+    },
+    "synergy": [
+      {
+        "name": "信用乘数效应",
+        "description": "核心企业信用穿透上下游，供应商融资成功率提升 45%。"
+      },
+      {
+        "name": "数据网络效应",
+        "description": "链上多源数据共享，风控模型持续进化，识别虚假贸易 ≥98%。"
+      },
+      {
+        "name": "流程协同效应",
+        "description": "多角色同屏协作，流程节点自动触发通知，实现端到端监控。"
+      }
+    ]
+  },
+  "implementation": {
+    "phases": [
+      {
+        "id": "phase1",
+        "title": "调研与选型",
+        "period": "1-2 月",
+        "focus": [
+          "业务流程梳理",
+          "联盟链架构选型",
+          "原型验证"
+        ],
+        "deliverables": [
+          "需求白皮书",
+          "概念验证 Demo",
+          "链上治理方案"
+        ],
+        "milestone": "完成试点流程与治理模型设计"
+      },
+      {
+        "id": "phase2",
+        "title": "平台开发与测试",
+        "period": "3-4 月",
+        "focus": [
+          "核心业务模块开发",
+          "智能合约部署",
+          "闭环测试"
+        ],
+        "deliverables": [
+          "API 网关",
+          "合约模板库",
+          "测试报告"
+        ],
+        "milestone": "封闭环境跑通并通过安全测试"
+      },
+      {
+        "id": "phase3",
+        "title": "试点推广与优化",
+        "period": "5-6 月",
+        "focus": [
+          "核心企业/银行接入",
+          "风控模型调优",
+          "试点运营"
+        ],
+        "deliverables": [
+          "接入手册",
+          "试点运营报告",
+          "数据校验报表"
+        ],
+        "milestone": "完成 ≥3 家银行、≥5 家核心企业试点"
+      },
+      {
+        "id": "phase4",
+        "title": "标准化与验收",
+        "period": "7-8 月",
+        "focus": [
+          "输出标准化方案",
+          "监管联调",
+          "验收评估"
+        ],
+        "deliverables": [
+          "标准化白皮书",
+          "监管对接报告",
+          "验收文档"
+        ],
+        "milestone": "形成可复制推广的双链融合模式"
+      }
+    ],
+    "gantt": [
+      {
+        "task": "需求调研",
+        "phase": "phase1",
+        "start": "2025-01",
+        "end": "2025-02",
+        "progress": 0.4
+      },
+      {
+        "task": "平台选型",
+        "phase": "phase1",
+        "start": "2025-01",
+        "end": "2025-02",
+        "progress": 0.35
+      },
+      {
+        "task": "模块开发",
+        "phase": "phase2",
+        "start": "2025-03",
+        "end": "2025-04",
+        "progress": 0.25
+      },
+      {
+        "task": "安全与性能测试",
+        "phase": "phase2",
+        "start": "2025-03",
+        "end": "2025-04",
+        "progress": 0.2
+      },
+      {
+        "task": "试点运营",
+        "phase": "phase3",
+        "start": "2025-05",
+        "end": "2025-06",
+        "progress": 0.15
+      },
+      {
+        "task": "优化与校准",
+        "phase": "phase3",
+        "start": "2025-05",
+        "end": "2025-06",
+        "progress": 0.12
+      },
+      {
+        "task": "标准化输出",
+        "phase": "phase4",
+        "start": "2025-07",
+        "end": "2025-08",
+        "progress": 0.1
+      },
+      {
+        "task": "验收评估",
+        "phase": "phase4",
+        "start": "2025-07",
+        "end": "2025-08",
+        "progress": 0.08
+      }
+    ]
+  },
+  "risk": {
+    "matrix": [
+      {
+        "id": "business",
+        "category": "业务风险",
+        "probability": 0.35,
+        "loss": 0.7,
+        "score": 0.245,
+        "grade": "高",
+        "priority": 1
+      },
+      {
+        "id": "technical",
+        "category": "技术风险",
+        "probability": 0.2,
+        "loss": 0.6,
+        "score": 0.12,
+        "grade": "中",
+        "priority": 2
+      },
+      {
+        "id": "cooperation",
+        "category": "合作风险",
+        "probability": 0.18,
+        "loss": 0.5,
+        "score": 0.09,
+        "grade": "中",
+        "priority": 3
+      },
+      {
+        "id": "compliance",
+        "category": "合规风险",
+        "probability": 0.15,
+        "loss": 0.65,
+        "score": 0.098,
+        "grade": "中",
+        "priority": 2
+      }
+    ],
+    "detail": {
+      "business": {
+        "issues": [
+          "虚假贸易",
+          "违约风险"
+        ],
+        "strategies": [
+          "政务/物流数据覆盖 ≥95%",
+          "S<70 自动追加 ≥30% 担保",
+          "单笔融资额度上限、二次质押防范"
+        ],
+        "triggers": [
+          "链上风控模型预警",
+          "供应链关系变更"
+        ]
+      },
+      "technical": {
+        "issues": [
+          "链上数据泄露",
+          "合约漏洞"
+        ],
+        "strategies": [
+          "第三方审计季度更新",
+          "实时安全扫描 <10 分钟",
+          "年度安全预算 15%"
+        ],
+        "triggers": [
+          "检测异常调用",
+          "合约升级前后"
+        ]
+      },
+      "cooperation": {
+        "issues": [
+          "合作方退出",
+          "额度池不足"
+        ],
+        "strategies": [
+          "≥3 家银行联合签约",
+          "≥5 家核心企业并行接入",
+          "2000 万应急资金池"
+        ],
+        "triggers": [
+          "合作方 SLA 违约",
+          "额度使用率 >90%"
+        ]
+      },
+      "compliance": {
+        "issues": [
+          "凭证法律地位",
+          "隐私与监管边界"
+        ],
+        "strategies": [
+          "民法典+电子签名法双重背书",
+          "数据最小化（仅哈希与关键字段）",
+          "技术服务方不触资/不担保",
+          "监管沙盒与专线节点"
+        ],
+        "triggers": [
+          "法规更新",
+          "跨境数据调用"
+        ]
+      }
+    },
+    "controls": {
+      "daily": {
+        "title": "日常监测",
+        "sla": "≤30 分钟",
+        "actions": [
+          "链上节点健康巡检",
+          "风控预警推送",
+          "异常资金自动冻结"
+        ]
+      },
+      "monthly": {
+        "title": "月度复盘",
+        "actions": [
+          "政策对齐工作坊",
+          "风险案例复盘",
+          "风控参数校准"
+        ]
+      },
+      "annual": {
+        "title": "年度第三方评估",
+        "actions": [
+          "独立审计报告",
+          "安全渗透测试",
+          "合规指标复核"
+        ]
+      }
+    }
+  },
+  "regulatory": {
+    "filters": {
+      "industries": [
+        "manufacturing",
+        "retail",
+        "logistics",
+        "it"
+      ],
+      "quarters": [
+        "2024Q4",
+        "2025Q1",
+        "2025Q2",
+        "2025Q3"
+      ],
+      "regions": [
+        "河南"
+      ],
+      "metrics": [
+        "totalAmount",
+        "loanCount",
+        "alerts"
+      ]
+    },
+    "stats": [
+      {
+        "quarter": "2024Q4",
+        "industry": "manufacturing",
+        "totalAmount": 280000000,
+        "loanCount": 168,
+        "alerts": 3,
+        "region": "河南"
+      },
+      {
+        "quarter": "2025Q1",
+        "industry": "manufacturing",
+        "totalAmount": 320000000,
+        "loanCount": 186,
+        "alerts": 2,
+        "region": "河南"
+      },
+      {
+        "quarter": "2025Q1",
+        "industry": "retail",
+        "totalAmount": 98000000,
+        "loanCount": 94,
+        "alerts": 1,
+        "region": "河南"
+      },
+      {
+        "quarter": "2025Q1",
+        "industry": "logistics",
+        "totalAmount": 76000000,
+        "loanCount": 68,
+        "alerts": 1,
+        "region": "河南"
+      },
+      {
+        "quarter": "2025Q2",
+        "industry": "manufacturing",
+        "totalAmount": 350000000,
+        "loanCount": 205,
+        "alerts": 2,
+        "region": "河南"
+      },
+      {
+        "quarter": "2025Q2",
+        "industry": "retail",
+        "totalAmount": 120000000,
+        "loanCount": 112,
+        "alerts": 1,
+        "region": "河南"
+      },
+      {
+        "quarter": "2025Q2",
+        "industry": "logistics",
+        "totalAmount": 82000000,
+        "loanCount": 76,
+        "alerts": 1,
+        "region": "河南"
+      },
+      {
+        "quarter": "2025Q2",
+        "industry": "it",
+        "totalAmount": 68000000,
+        "loanCount": 52,
+        "alerts": 1,
+        "region": "河南"
+      }
+    ],
+    "heatmap": {
+      "regions": [
+        "郑州",
+        "洛阳",
+        "开封"
+      ],
+      "values": [
+        72,
+        45,
+        38
+      ]
+    },
+    "summary": "监管穿透视图提供按季度、行业、区域的融资总额、放款笔数与风险预警数量。"
+  },
+  "outcomes": {
+    "projection": [
+      {
+        "year": 2024,
+        "serviceEnterprises": 500,
+        "financingAmount": 50,
+        "unit": "亿元"
+      },
+      {
+        "year": 2025,
+        "serviceEnterprises": 1500,
+        "financingAmount": 150,
+        "unit": "亿元"
+      },
+      {
+        "year": 2026,
+        "serviceEnterprises": 3000,
+        "financingAmount": 300,
+        "unit": "亿元"
+      }
+    ],
+    "costSavings": {
+      "enterprise": 150000000,
+      "institution": {
+        "manualReduction": 0.6,
+        "paperCost": 5000000
+      }
+    },
+    "industryImpact": {
+      "efficiency": 0.5,
+      "badLoan": -0.6,
+      "access": 0.4
+    },
+    "scalability": [
+      "双链融合模式标准化输出",
+      "可复制推广至跨境贸易"
+    ]
+  },
+  "team": {
+    "members": [
+      {
+        "name": "马琬淳",
+        "role": "架构设计"
+      },
+      {
+        "name": "李沛柯",
+        "role": "数据与可视化"
+      },
+      {
+        "name": "汪文吉",
+        "role": "业务策略"
+      }
+    ],
+    "school": "河南大学",
+    "advisors": [
+      "指导老师："
+    ],
+    "thanks": "感谢区块链联盟、合作银行与监管单位的指导",
+    "license": "仅用于技术演示，示例数据非真实业务"
+  },
+  "dataAssets": {
+    "enterprises": [
+      {
+        "enterpriseId": "E001",
+        "name": "华新制造",
+        "industry": "manufacturing",
+        "registeredCapital": 120000,
+        "years": 15,
+        "creditHistory": {
+          "overdue": 0,
+          "lawsuits": 0
+        }
+      },
+      {
+        "enterpriseId": "E002",
+        "name": "鼎盛重工",
+        "industry": "manufacturing",
+        "registeredCapital": 95000,
+        "years": 14,
+        "creditHistory": {
+          "overdue": 1,
+          "lawsuits": 0
+        }
+      },
+      {
+        "enterpriseId": "E003",
+        "name": "远航物流",
+        "industry": "logistics",
+        "registeredCapital": 38000,
+        "years": 10,
+        "creditHistory": {
+          "overdue": 0,
+          "lawsuits": 0
+        }
+      },
+      {
+        "enterpriseId": "E004",
+        "name": "蓝桥连锁零售",
+        "industry": "retail",
+        "registeredCapital": 42000,
+        "years": 8,
+        "creditHistory": {
+          "overdue": 2,
+          "lawsuits": 1
+        }
+      },
+      {
+        "enterpriseId": "E005",
+        "name": "星辉电子",
+        "industry": "manufacturing",
+        "registeredCapital": 56000,
+        "years": 9,
+        "creditHistory": {
+          "overdue": 0,
+          "lawsuits": 0
+        }
+      },
+      {
+        "enterpriseId": "E006",
+        "name": "瑞泰医疗器械",
+        "industry": "manufacturing",
+        "registeredCapital": 68000,
+        "years": 11,
+        "creditHistory": {
+          "overdue": 1,
+          "lawsuits": 0
+        }
+      },
+      {
+        "enterpriseId": "E007",
+        "name": "慧链数字科技",
+        "industry": "it",
+        "registeredCapital": 90000,
+        "years": 7,
+        "creditHistory": {
+          "overdue": 0,
+          "lawsuits": 0
+        }
+      },
+      {
+        "enterpriseId": "E008",
+        "name": "安航冷链",
+        "industry": "logistics",
+        "registeredCapital": 36000,
+        "years": 6,
+        "creditHistory": {
+          "overdue": 1,
+          "lawsuits": 0
+        }
+      },
+      {
+        "enterpriseId": "E009",
+        "name": "华泰轻工",
+        "industry": "manufacturing",
+        "registeredCapital": 48000,
+        "years": 13,
+        "creditHistory": {
+          "overdue": 0,
+          "lawsuits": 0
+        }
+      },
+      {
+        "enterpriseId": "E010",
+        "name": "诚品供应链",
+        "industry": "retail",
+        "registeredCapital": 30000,
+        "years": 5,
+        "creditHistory": {
+          "overdue": 2,
+          "lawsuits": 0
+        }
+      }
+    ],
+    "orders": [
+      {
+        "orderNo": "ORD-2025-001",
+        "enterpriseId": "E004",
+        "amount": 285000.0,
+        "delivered": true,
+        "ts": "2025-03-06T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-002",
+        "enterpriseId": "E004",
+        "amount": 330000.0,
+        "delivered": true,
+        "ts": "2025-03-09T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-003",
+        "enterpriseId": "E004",
+        "amount": 375000.0,
+        "delivered": true,
+        "ts": "2025-03-12T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-004",
+        "enterpriseId": "E005",
+        "amount": 420000.0,
+        "delivered": true,
+        "ts": "2025-03-15T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-005",
+        "enterpriseId": "E005",
+        "amount": 465000.00000000006,
+        "delivered": true,
+        "ts": "2025-03-18T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-006",
+        "enterpriseId": "E005",
+        "amount": 509999.99999999994,
+        "delivered": false,
+        "ts": "2025-03-21T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-007",
+        "enterpriseId": "E006",
+        "amount": 555000.0,
+        "delivered": true,
+        "ts": "2025-03-24T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-008",
+        "enterpriseId": "E006",
+        "amount": 600000.0,
+        "delivered": true,
+        "ts": "2025-03-27T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-009",
+        "enterpriseId": "E006",
+        "amount": 240000.0,
+        "delivered": true,
+        "ts": "2025-03-30T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-010",
+        "enterpriseId": "E009",
+        "amount": 285000.0,
+        "delivered": true,
+        "ts": "2025-04-02T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-011",
+        "enterpriseId": "E009",
+        "amount": 330000.0,
+        "delivered": true,
+        "ts": "2025-04-05T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-012",
+        "enterpriseId": "E009",
+        "amount": 375000.0,
+        "delivered": false,
+        "ts": "2025-04-08T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-013",
+        "enterpriseId": "E010",
+        "amount": 420000.0,
+        "delivered": true,
+        "ts": "2025-04-11T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-014",
+        "enterpriseId": "E010",
+        "amount": 465000.00000000006,
+        "delivered": true,
+        "ts": "2025-04-14T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-015",
+        "enterpriseId": "E010",
+        "amount": 509999.99999999994,
+        "delivered": true,
+        "ts": "2025-04-17T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-016",
+        "enterpriseId": "E003",
+        "amount": 555000.0,
+        "delivered": true,
+        "ts": "2025-04-20T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-017",
+        "enterpriseId": "E003",
+        "amount": 600000.0,
+        "delivered": true,
+        "ts": "2025-04-23T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-018",
+        "enterpriseId": "E003",
+        "amount": 240000.0,
+        "delivered": false,
+        "ts": "2025-04-26T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-019",
+        "enterpriseId": "E008",
+        "amount": 285000.0,
+        "delivered": true,
+        "ts": "2025-04-29T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-020",
+        "enterpriseId": "E008",
+        "amount": 330000.0,
+        "delivered": true,
+        "ts": "2025-05-02T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-021",
+        "enterpriseId": "E008",
+        "amount": 375000.0,
+        "delivered": true,
+        "ts": "2025-05-05T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-022",
+        "enterpriseId": "E007",
+        "amount": 420000.0,
+        "delivered": true,
+        "ts": "2025-05-08T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-023",
+        "enterpriseId": "E007",
+        "amount": 465000.00000000006,
+        "delivered": true,
+        "ts": "2025-05-11T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-024",
+        "enterpriseId": "E007",
+        "amount": 509999.99999999994,
+        "delivered": false,
+        "ts": "2025-05-14T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-025",
+        "enterpriseId": "E001",
+        "amount": 555000.0,
+        "delivered": true,
+        "ts": "2025-05-17T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-026",
+        "enterpriseId": "E001",
+        "amount": 600000.0,
+        "delivered": true,
+        "ts": "2025-05-20T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-027",
+        "enterpriseId": "E001",
+        "amount": 240000.0,
+        "delivered": true,
+        "ts": "2025-05-23T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-028",
+        "enterpriseId": "E002",
+        "amount": 285000.0,
+        "delivered": true,
+        "ts": "2025-05-26T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-029",
+        "enterpriseId": "E002",
+        "amount": 330000.0,
+        "delivered": true,
+        "ts": "2025-05-29T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-030",
+        "enterpriseId": "E002",
+        "amount": 375000.0,
+        "delivered": false,
+        "ts": "2025-06-01T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-031",
+        "enterpriseId": "E005",
+        "amount": 420000.0,
+        "delivered": true,
+        "ts": "2025-06-04T09:00:00",
+        "currency": "CNY"
+      },
+      {
+        "orderNo": "ORD-2025-032",
+        "enterpriseId": "E010",
+        "amount": 465000.00000000006,
+        "delivered": true,
+        "ts": "2025-06-07T09:00:00",
+        "currency": "CNY"
+      }
+    ],
+    "logistics": [
+      {
+        "waybill": "WB-0001",
+        "orderNo": "ORD-2025-001",
+        "provider": "远航物流",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-03-06T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-03-07T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-03-07T16:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.9
+        }
+      },
+      {
+        "waybill": "WB-0002",
+        "orderNo": "ORD-2025-002",
+        "provider": "安航冷链",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-03-09T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-03-10T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-03-10T17:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.92
+        }
+      },
+      {
+        "waybill": "WB-0003",
+        "orderNo": "ORD-2025-003",
+        "provider": "远航物流",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-03-12T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-03-13T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-03-13T18:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.94
+        }
+      },
+      {
+        "waybill": "WB-0004",
+        "orderNo": "ORD-2025-004",
+        "provider": "安航冷链",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-03-15T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-03-16T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-03-16T19:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.96
+        }
+      },
+      {
+        "waybill": "WB-0005",
+        "orderNo": "ORD-2025-005",
+        "provider": "远航物流",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-03-18T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-03-19T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-03-19T20:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.98
+        }
+      },
+      {
+        "waybill": "WB-0006",
+        "orderNo": "ORD-2025-006",
+        "provider": "安航冷链",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-03-21T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-03-22T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-03-22T16:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.9
+        }
+      },
+      {
+        "waybill": "WB-0007",
+        "orderNo": "ORD-2025-007",
+        "provider": "远航物流",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-03-24T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-03-25T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-03-25T17:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.92
+        }
+      },
+      {
+        "waybill": "WB-0008",
+        "orderNo": "ORD-2025-008",
+        "provider": "安航冷链",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-03-27T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-03-28T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-03-28T18:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.94
+        }
+      },
+      {
+        "waybill": "WB-0009",
+        "orderNo": "ORD-2025-009",
+        "provider": "远航物流",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-03-30T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-03-31T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-03-31T19:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.96
+        }
+      },
+      {
+        "waybill": "WB-0010",
+        "orderNo": "ORD-2025-010",
+        "provider": "安航冷链",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-04-02T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-04-03T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-04-03T20:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.98
+        }
+      },
+      {
+        "waybill": "WB-0011",
+        "orderNo": "ORD-2025-011",
+        "provider": "远航物流",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-04-05T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-04-06T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-04-06T16:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.9
+        }
+      },
+      {
+        "waybill": "WB-0012",
+        "orderNo": "ORD-2025-012",
+        "provider": "安航冷链",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-04-08T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-04-09T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-04-09T17:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.92
+        }
+      },
+      {
+        "waybill": "WB-0013",
+        "orderNo": "ORD-2025-013",
+        "provider": "远航物流",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-04-11T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-04-12T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-04-12T18:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.94
+        }
+      },
+      {
+        "waybill": "WB-0014",
+        "orderNo": "ORD-2025-014",
+        "provider": "安航冷链",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-04-14T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-04-15T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-04-15T19:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.96
+        }
+      },
+      {
+        "waybill": "WB-0015",
+        "orderNo": "ORD-2025-015",
+        "provider": "远航物流",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-04-17T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-04-18T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-04-18T20:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.98
+        }
+      },
+      {
+        "waybill": "WB-0016",
+        "orderNo": "ORD-2025-016",
+        "provider": "安航冷链",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-04-20T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-04-21T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-04-21T16:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.9
+        }
+      },
+      {
+        "waybill": "WB-0017",
+        "orderNo": "ORD-2025-017",
+        "provider": "远航物流",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-04-23T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-04-24T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-04-24T17:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.92
+        }
+      },
+      {
+        "waybill": "WB-0018",
+        "orderNo": "ORD-2025-018",
+        "provider": "安航冷链",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-04-26T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-04-27T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-04-27T18:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.94
+        }
+      },
+      {
+        "waybill": "WB-0019",
+        "orderNo": "ORD-2025-019",
+        "provider": "远航物流",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-04-29T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-04-30T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-04-30T19:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.96
+        }
+      },
+      {
+        "waybill": "WB-0020",
+        "orderNo": "ORD-2025-020",
+        "provider": "安航冷链",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-05-02T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-05-03T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-05-03T20:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.98
+        }
+      },
+      {
+        "waybill": "WB-0021",
+        "orderNo": "ORD-2025-021",
+        "provider": "远航物流",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-05-05T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-05-06T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-05-06T16:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.9
+        }
+      },
+      {
+        "waybill": "WB-0022",
+        "orderNo": "ORD-2025-022",
+        "provider": "安航冷链",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-05-08T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-05-09T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-05-09T17:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.92
+        }
+      },
+      {
+        "waybill": "WB-0023",
+        "orderNo": "ORD-2025-023",
+        "provider": "远航物流",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-05-11T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-05-12T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-05-12T18:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.94
+        }
+      },
+      {
+        "waybill": "WB-0024",
+        "orderNo": "ORD-2025-024",
+        "provider": "安航冷链",
+        "events": [
+          {
+            "status": "发车",
+            "ts": "2025-05-14T13:00:00"
+          },
+          {
+            "status": "到站",
+            "ts": "2025-05-15T15:00:00"
+          },
+          {
+            "status": "签收",
+            "ts": "2025-05-15T19:00:00"
+          }
+        ],
+        "matched": {
+          "status": true,
+          "ratio": 0.96
+        }
+      }
+    ],
+    "invoices": [
+      {
+        "invoiceNo": "INV-25-0001",
+        "orderNo": "ORD-2025-001",
+        "checkResult": false,
+        "hash": "9752915a9308eb1b23acb0e7bc98b8ac",
+        "ts": "2025-03-08T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0002",
+        "orderNo": "ORD-2025-002",
+        "checkResult": true,
+        "hash": "172e4a2e8b4c003c6a482729ea9a2d55",
+        "ts": "2025-03-11T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0003",
+        "orderNo": "ORD-2025-003",
+        "checkResult": true,
+        "hash": "9177b789a904c7c709db268e8f6db0e4",
+        "ts": "2025-03-14T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0004",
+        "orderNo": "ORD-2025-004",
+        "checkResult": true,
+        "hash": "6b111c00bbc4653fdff8a8d899cbbd61",
+        "ts": "2025-03-17T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0005",
+        "orderNo": "ORD-2025-005",
+        "checkResult": true,
+        "hash": "ce5c362002675e10df26c262fe007464",
+        "ts": "2025-03-20T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0006",
+        "orderNo": "ORD-2025-006",
+        "checkResult": true,
+        "hash": "d3fe63220361233086e45e47dd0deaaa",
+        "ts": "2025-03-23T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0007",
+        "orderNo": "ORD-2025-007",
+        "checkResult": true,
+        "hash": "0644a43738d2f9ca88d602a23cdfb8e1",
+        "ts": "2025-03-26T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0008",
+        "orderNo": "ORD-2025-008",
+        "checkResult": true,
+        "hash": "6b51c175d616347258665a9686087264",
+        "ts": "2025-03-29T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0009",
+        "orderNo": "ORD-2025-009",
+        "checkResult": true,
+        "hash": "30cb76ac013bc176f4f2c42e3df87d19",
+        "ts": "2025-04-01T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0010",
+        "orderNo": "ORD-2025-010",
+        "checkResult": true,
+        "hash": "b743000af37c360c67d28b83ad5eea99",
+        "ts": "2025-04-04T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0011",
+        "orderNo": "ORD-2025-011",
+        "checkResult": true,
+        "hash": "805ae3901ebc6bf9a60d156b2f48c091",
+        "ts": "2025-04-07T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0012",
+        "orderNo": "ORD-2025-012",
+        "checkResult": false,
+        "hash": "83056c84c2a2cadaf07163abdcc05760",
+        "ts": "2025-04-10T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0013",
+        "orderNo": "ORD-2025-013",
+        "checkResult": true,
+        "hash": "dc9da1b95376e00f5577f0518b0d6a36",
+        "ts": "2025-04-13T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0014",
+        "orderNo": "ORD-2025-014",
+        "checkResult": true,
+        "hash": "eaf52713795c73c5849d5a424619f295",
+        "ts": "2025-04-16T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0015",
+        "orderNo": "ORD-2025-015",
+        "checkResult": true,
+        "hash": "3802c68fe7425705855d3170ee582f22",
+        "ts": "2025-04-19T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0016",
+        "orderNo": "ORD-2025-016",
+        "checkResult": true,
+        "hash": "f444eedda01caa05dc3dc4757b1d92e2",
+        "ts": "2025-04-22T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0017",
+        "orderNo": "ORD-2025-017",
+        "checkResult": true,
+        "hash": "c61618c6278b1080b258e66e3ab0b0e2",
+        "ts": "2025-04-25T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0018",
+        "orderNo": "ORD-2025-018",
+        "checkResult": true,
+        "hash": "ce066260481521ba6452f1570113d7df",
+        "ts": "2025-04-28T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0019",
+        "orderNo": "ORD-2025-019",
+        "checkResult": true,
+        "hash": "2c5175e941ccdd5ebbe4d90bfb92da36",
+        "ts": "2025-05-01T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0020",
+        "orderNo": "ORD-2025-020",
+        "checkResult": true,
+        "hash": "d72b0a6719dc01d12042da9e73bf7020",
+        "ts": "2025-05-04T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0021",
+        "orderNo": "ORD-2025-021",
+        "checkResult": true,
+        "hash": "a494c510392ef4eeea7352d22c7016ba",
+        "ts": "2025-05-07T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0022",
+        "orderNo": "ORD-2025-022",
+        "checkResult": true,
+        "hash": "41aabce7b15a2f221370dd2bf4c995ec",
+        "ts": "2025-05-10T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0023",
+        "orderNo": "ORD-2025-023",
+        "checkResult": false,
+        "hash": "3b8b91e61733069af8507a9e7ef3d2f6",
+        "ts": "2025-05-13T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0024",
+        "orderNo": "ORD-2025-024",
+        "checkResult": true,
+        "hash": "5748d0946e8a20f4efe888ec17d300ac",
+        "ts": "2025-05-16T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0025",
+        "orderNo": "ORD-2025-025",
+        "checkResult": true,
+        "hash": "f4ba0cf8378bee1837ff614adaadfd00",
+        "ts": "2025-05-19T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0026",
+        "orderNo": "ORD-2025-026",
+        "checkResult": true,
+        "hash": "61a28cf31ac79f0737df4723af76a5f1",
+        "ts": "2025-05-22T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0027",
+        "orderNo": "ORD-2025-027",
+        "checkResult": true,
+        "hash": "382ed14e866af8cc32f219d2748f7a53",
+        "ts": "2025-05-25T09:00:00"
+      },
+      {
+        "invoiceNo": "INV-25-0028",
+        "orderNo": "ORD-2025-028",
+        "checkResult": true,
+        "hash": "b03bfa63fb4e78407e04f71e068b54de",
+        "ts": "2025-05-28T09:00:00"
+      }
+    ],
+    "receivables": [
+      {
+        "tokenId": "RCV-0001",
+        "orderNo": "ORD-2025-001",
+        "faceValue": 270750.0,
+        "debtor": "E001",
+        "creditor": "E004",
+        "dueDate": "2025-05-05",
+        "status": "ISSUED"
+      },
+      {
+        "tokenId": "RCV-0002",
+        "orderNo": "ORD-2025-002",
+        "faceValue": 313500.0,
+        "debtor": "E002",
+        "creditor": "E004",
+        "dueDate": "2025-05-08",
+        "status": "PLEDGED"
+      },
+      {
+        "tokenId": "RCV-0003",
+        "orderNo": "ORD-2025-003",
+        "faceValue": 356250.0,
+        "debtor": "E001",
+        "creditor": "E004",
+        "dueDate": "2025-05-11",
+        "status": "FUNDED"
+      },
+      {
+        "tokenId": "RCV-0004",
+        "orderNo": "ORD-2025-004",
+        "faceValue": 399000.0,
+        "debtor": "E002",
+        "creditor": "E005",
+        "dueDate": "2025-05-14",
+        "status": "SETTLED"
+      },
+      {
+        "tokenId": "RCV-0005",
+        "orderNo": "ORD-2025-005",
+        "faceValue": 441750.0,
+        "debtor": "E001",
+        "creditor": "E005",
+        "dueDate": "2025-05-17",
+        "status": "ISSUED"
+      },
+      {
+        "tokenId": "RCV-0006",
+        "orderNo": "ORD-2025-006",
+        "faceValue": 484500.0,
+        "debtor": "E002",
+        "creditor": "E005",
+        "dueDate": "2025-05-20",
+        "status": "PLEDGED"
+      },
+      {
+        "tokenId": "RCV-0007",
+        "orderNo": "ORD-2025-007",
+        "faceValue": 527250.0,
+        "debtor": "E001",
+        "creditor": "E006",
+        "dueDate": "2025-05-23",
+        "status": "FUNDED"
+      },
+      {
+        "tokenId": "RCV-0008",
+        "orderNo": "ORD-2025-008",
+        "faceValue": 570000.0,
+        "debtor": "E002",
+        "creditor": "E006",
+        "dueDate": "2025-05-26",
+        "status": "SETTLED"
+      },
+      {
+        "tokenId": "RCV-0009",
+        "orderNo": "ORD-2025-009",
+        "faceValue": 228000.0,
+        "debtor": "E001",
+        "creditor": "E006",
+        "dueDate": "2025-05-29",
+        "status": "ISSUED"
+      },
+      {
+        "tokenId": "RCV-0010",
+        "orderNo": "ORD-2025-010",
+        "faceValue": 270750.0,
+        "debtor": "E002",
+        "creditor": "E009",
+        "dueDate": "2025-06-01",
+        "status": "PLEDGED"
+      },
+      {
+        "tokenId": "RCV-0011",
+        "orderNo": "ORD-2025-011",
+        "faceValue": 313500.0,
+        "debtor": "E001",
+        "creditor": "E009",
+        "dueDate": "2025-06-04",
+        "status": "FUNDED"
+      },
+      {
+        "tokenId": "RCV-0012",
+        "orderNo": "ORD-2025-012",
+        "faceValue": 356250.0,
+        "debtor": "E002",
+        "creditor": "E009",
+        "dueDate": "2025-06-07",
+        "status": "SETTLED"
+      },
+      {
+        "tokenId": "RCV-0013",
+        "orderNo": "ORD-2025-013",
+        "faceValue": 399000.0,
+        "debtor": "E001",
+        "creditor": "E010",
+        "dueDate": "2025-06-10",
+        "status": "ISSUED"
+      },
+      {
+        "tokenId": "RCV-0014",
+        "orderNo": "ORD-2025-014",
+        "faceValue": 441750.0,
+        "debtor": "E002",
+        "creditor": "E010",
+        "dueDate": "2025-06-13",
+        "status": "PLEDGED"
+      },
+      {
+        "tokenId": "RCV-0015",
+        "orderNo": "ORD-2025-015",
+        "faceValue": 484500.0,
+        "debtor": "E001",
+        "creditor": "E010",
+        "dueDate": "2025-06-16",
+        "status": "FUNDED"
+      },
+      {
+        "tokenId": "RCV-0016",
+        "orderNo": "ORD-2025-016",
+        "faceValue": 527250.0,
+        "debtor": "E002",
+        "creditor": "E003",
+        "dueDate": "2025-06-19",
+        "status": "SETTLED"
+      },
+      {
+        "tokenId": "RCV-0017",
+        "orderNo": "ORD-2025-017",
+        "faceValue": 570000.0,
+        "debtor": "E001",
+        "creditor": "E003",
+        "dueDate": "2025-06-22",
+        "status": "ISSUED"
+      },
+      {
+        "tokenId": "RCV-0018",
+        "orderNo": "ORD-2025-018",
+        "faceValue": 228000.0,
+        "debtor": "E002",
+        "creditor": "E003",
+        "dueDate": "2025-06-25",
+        "status": "PLEDGED"
+      }
+    ],
+    "financeApps": [
+      {
+        "appId": "APP-0001",
+        "tokenId": "RCV-0001",
+        "amountReq": 243675.0,
+        "whitelist": true,
+        "poolRemain": 50000000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-04-05T00:00:00"
+      },
+      {
+        "appId": "APP-0002",
+        "tokenId": "RCV-0002",
+        "amountReq": 282150.0,
+        "whitelist": true,
+        "poolRemain": 48200000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-04-08T00:00:00"
+      },
+      {
+        "appId": "APP-0003",
+        "tokenId": "RCV-0003",
+        "amountReq": 320625.0,
+        "whitelist": true,
+        "poolRemain": 46400000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-04-11T00:00:00"
+      },
+      {
+        "appId": "APP-0004",
+        "tokenId": "RCV-0004",
+        "amountReq": 359100.0,
+        "whitelist": true,
+        "poolRemain": 44600000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-04-14T00:00:00"
+      },
+      {
+        "appId": "APP-0005",
+        "tokenId": "RCV-0005",
+        "amountReq": 397575.0,
+        "whitelist": true,
+        "poolRemain": 42800000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-04-17T00:00:00"
+      },
+      {
+        "appId": "APP-0006",
+        "tokenId": "RCV-0006",
+        "amountReq": 436050.0,
+        "whitelist": true,
+        "poolRemain": 41000000,
+        "singleLimit": 2000000,
+        "approved": false,
+        "fundedAt": null
+      },
+      {
+        "appId": "APP-0007",
+        "tokenId": "RCV-0007",
+        "amountReq": 474525.0,
+        "whitelist": true,
+        "poolRemain": 39200000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-04-23T00:00:00"
+      },
+      {
+        "appId": "APP-0008",
+        "tokenId": "RCV-0008",
+        "amountReq": 513000.0,
+        "whitelist": true,
+        "poolRemain": 37400000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-04-26T00:00:00"
+      },
+      {
+        "appId": "APP-0009",
+        "tokenId": "RCV-0009",
+        "amountReq": 205200.0,
+        "whitelist": true,
+        "poolRemain": 35600000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-04-29T00:00:00"
+      },
+      {
+        "appId": "APP-0010",
+        "tokenId": "RCV-0010",
+        "amountReq": 243675.0,
+        "whitelist": true,
+        "poolRemain": 33800000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-05-02T00:00:00"
+      },
+      {
+        "appId": "APP-0011",
+        "tokenId": "RCV-0011",
+        "amountReq": 282150.0,
+        "whitelist": true,
+        "poolRemain": 32000000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-05-05T00:00:00"
+      },
+      {
+        "appId": "APP-0012",
+        "tokenId": "RCV-0012",
+        "amountReq": 320625.0,
+        "whitelist": true,
+        "poolRemain": 30200000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-05-08T00:00:00"
+      },
+      {
+        "appId": "APP-0013",
+        "tokenId": "RCV-0013",
+        "amountReq": 359100.0,
+        "whitelist": true,
+        "poolRemain": 28400000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-05-11T00:00:00"
+      },
+      {
+        "appId": "APP-0014",
+        "tokenId": "RCV-0014",
+        "amountReq": 397575.0,
+        "whitelist": true,
+        "poolRemain": 26600000,
+        "singleLimit": 2000000,
+        "approved": true,
+        "fundedAt": "2025-05-14T00:00:00"
+      },
+      {
+        "appId": "APP-0015",
+        "tokenId": "RCV-0015",
+        "amountReq": 436050.0,
+        "whitelist": true,
+        "poolRemain": 24800000,
+        "singleLimit": 2000000,
+        "approved": false,
+        "fundedAt": null
+      }
+    ],
+    "scores": [
+      {
+        "enterpriseId": "E001",
+        "month": "2025-03",
+        "S1": 90,
+        "S2": 84,
+        "S3": 80,
+        "S4": 86,
+        "S": 85.2
+      },
+      {
+        "enterpriseId": "E001",
+        "month": "2025-04",
+        "S1": 91,
+        "S2": 85,
+        "S3": 81,
+        "S4": 87,
+        "S": 86.2
+      },
+      {
+        "enterpriseId": "E001",
+        "month": "2025-05",
+        "S1": 92,
+        "S2": 86,
+        "S3": 82,
+        "S4": 88,
+        "S": 87.2
+      },
+      {
+        "enterpriseId": "E001",
+        "month": "2025-06",
+        "S1": 93,
+        "S2": 87,
+        "S3": 83,
+        "S4": 89,
+        "S": 88.2
+      },
+      {
+        "enterpriseId": "E001",
+        "month": "2025-07",
+        "S1": 94,
+        "S2": 88,
+        "S3": 84,
+        "S4": 90,
+        "S": 89.2
+      },
+      {
+        "enterpriseId": "E001",
+        "month": "2025-08",
+        "S1": 95,
+        "S2": 88,
+        "S3": 84,
+        "S4": 91,
+        "S": 89.6
+      },
+      {
+        "enterpriseId": "E002",
+        "month": "2025-03",
+        "S1": 88,
+        "S2": 81,
+        "S3": 78,
+        "S4": 84,
+        "S": 82.8
+      },
+      {
+        "enterpriseId": "E002",
+        "month": "2025-04",
+        "S1": 89,
+        "S2": 82,
+        "S3": 79,
+        "S4": 85,
+        "S": 83.8
+      },
+      {
+        "enterpriseId": "E002",
+        "month": "2025-05",
+        "S1": 90,
+        "S2": 83,
+        "S3": 80,
+        "S4": 86,
+        "S": 84.8
+      },
+      {
+        "enterpriseId": "E002",
+        "month": "2025-06",
+        "S1": 91,
+        "S2": 84,
+        "S3": 81,
+        "S4": 87,
+        "S": 85.8
+      },
+      {
+        "enterpriseId": "E002",
+        "month": "2025-07",
+        "S1": 92,
+        "S2": 85,
+        "S3": 82,
+        "S4": 88,
+        "S": 86.8
+      },
+      {
+        "enterpriseId": "E002",
+        "month": "2025-08",
+        "S1": 93,
+        "S2": 86,
+        "S3": 83,
+        "S4": 88,
+        "S": 87.7
+      },
+      {
+        "enterpriseId": "E003",
+        "month": "2025-03",
+        "S1": 78,
+        "S2": 76,
+        "S3": 72,
+        "S4": 79,
+        "S": 76.1
+      },
+      {
+        "enterpriseId": "E003",
+        "month": "2025-04",
+        "S1": 79,
+        "S2": 77,
+        "S3": 73,
+        "S4": 80,
+        "S": 77.1
+      },
+      {
+        "enterpriseId": "E003",
+        "month": "2025-05",
+        "S1": 80,
+        "S2": 78,
+        "S3": 74,
+        "S4": 81,
+        "S": 78.1
+      },
+      {
+        "enterpriseId": "E003",
+        "month": "2025-06",
+        "S1": 81,
+        "S2": 79,
+        "S3": 75,
+        "S4": 82,
+        "S": 79.1
+      },
+      {
+        "enterpriseId": "E003",
+        "month": "2025-07",
+        "S1": 82,
+        "S2": 80,
+        "S3": 76,
+        "S4": 83,
+        "S": 80.1
+      },
+      {
+        "enterpriseId": "E003",
+        "month": "2025-08",
+        "S1": 82,
+        "S2": 80,
+        "S3": 76,
+        "S4": 83,
+        "S": 80.1
+      },
+      {
+        "enterpriseId": "E004",
+        "month": "2025-03",
+        "S1": 74,
+        "S2": 72,
+        "S3": 68,
+        "S4": 70,
+        "S": 71.6
+      },
+      {
+        "enterpriseId": "E004",
+        "month": "2025-04",
+        "S1": 75,
+        "S2": 73,
+        "S3": 69,
+        "S4": 71,
+        "S": 72.6
+      },
+      {
+        "enterpriseId": "E004",
+        "month": "2025-05",
+        "S1": 76,
+        "S2": 74,
+        "S3": 70,
+        "S4": 72,
+        "S": 73.6
+      },
+      {
+        "enterpriseId": "E004",
+        "month": "2025-06",
+        "S1": 77,
+        "S2": 75,
+        "S3": 71,
+        "S4": 73,
+        "S": 74.6
+      },
+      {
+        "enterpriseId": "E004",
+        "month": "2025-07",
+        "S1": 77,
+        "S2": 76,
+        "S3": 72,
+        "S4": 73,
+        "S": 75.2
+      },
+      {
+        "enterpriseId": "E004",
+        "month": "2025-08",
+        "S1": 77,
+        "S2": 76,
+        "S3": 72,
+        "S4": 73,
+        "S": 75.2
+      },
+      {
+        "enterpriseId": "E005",
+        "month": "2025-03",
+        "S1": 86,
+        "S2": 83,
+        "S3": 80,
+        "S4": 88,
+        "S": 83.8
+      },
+      {
+        "enterpriseId": "E005",
+        "month": "2025-04",
+        "S1": 87,
+        "S2": 84,
+        "S3": 81,
+        "S4": 89,
+        "S": 84.8
+      },
+      {
+        "enterpriseId": "E005",
+        "month": "2025-05",
+        "S1": 88,
+        "S2": 85,
+        "S3": 82,
+        "S4": 90,
+        "S": 85.8
+      },
+      {
+        "enterpriseId": "E005",
+        "month": "2025-06",
+        "S1": 89,
+        "S2": 86,
+        "S3": 83,
+        "S4": 91,
+        "S": 86.8
+      },
+      {
+        "enterpriseId": "E005",
+        "month": "2025-07",
+        "S1": 90,
+        "S2": 87,
+        "S3": 84,
+        "S4": 92,
+        "S": 87.8
+      },
+      {
+        "enterpriseId": "E005",
+        "month": "2025-08",
+        "S1": 90,
+        "S2": 88,
+        "S3": 84,
+        "S4": 92,
+        "S": 88.2
+      },
+      {
+        "enterpriseId": "E006",
+        "month": "2025-03",
+        "S1": 83,
+        "S2": 80,
+        "S3": 77,
+        "S4": 82,
+        "S": 80.5
+      },
+      {
+        "enterpriseId": "E006",
+        "month": "2025-04",
+        "S1": 84,
+        "S2": 81,
+        "S3": 78,
+        "S4": 83,
+        "S": 81.5
+      },
+      {
+        "enterpriseId": "E006",
+        "month": "2025-05",
+        "S1": 85,
+        "S2": 82,
+        "S3": 79,
+        "S4": 84,
+        "S": 82.5
+      },
+      {
+        "enterpriseId": "E006",
+        "month": "2025-06",
+        "S1": 86,
+        "S2": 83,
+        "S3": 80,
+        "S4": 85,
+        "S": 83.5
+      },
+      {
+        "enterpriseId": "E006",
+        "month": "2025-07",
+        "S1": 87,
+        "S2": 84,
+        "S3": 81,
+        "S4": 86,
+        "S": 84.5
+      },
+      {
+        "enterpriseId": "E006",
+        "month": "2025-08",
+        "S1": 87,
+        "S2": 84,
+        "S3": 81,
+        "S4": 86,
+        "S": 84.5
+      },
+      {
+        "enterpriseId": "E007",
+        "month": "2025-03",
+        "S1": 88,
+        "S2": 85,
+        "S3": 82,
+        "S4": 90,
+        "S": 85.8
+      },
+      {
+        "enterpriseId": "E007",
+        "month": "2025-04",
+        "S1": 89,
+        "S2": 86,
+        "S3": 83,
+        "S4": 91,
+        "S": 86.8
+      },
+      {
+        "enterpriseId": "E007",
+        "month": "2025-05",
+        "S1": 90,
+        "S2": 87,
+        "S3": 84,
+        "S4": 92,
+        "S": 87.8
+      },
+      {
+        "enterpriseId": "E007",
+        "month": "2025-06",
+        "S1": 91,
+        "S2": 88,
+        "S3": 85,
+        "S4": 93,
+        "S": 88.8
+      },
+      {
+        "enterpriseId": "E007",
+        "month": "2025-07",
+        "S1": 92,
+        "S2": 89,
+        "S3": 86,
+        "S4": 94,
+        "S": 89.8
+      },
+      {
+        "enterpriseId": "E007",
+        "month": "2025-08",
+        "S1": 92,
+        "S2": 89,
+        "S3": 86,
+        "S4": 94,
+        "S": 89.8
+      },
+      {
+        "enterpriseId": "E008",
+        "month": "2025-03",
+        "S1": 76,
+        "S2": 75,
+        "S3": 70,
+        "S4": 78,
+        "S": 74.6
+      },
+      {
+        "enterpriseId": "E008",
+        "month": "2025-04",
+        "S1": 77,
+        "S2": 76,
+        "S3": 71,
+        "S4": 79,
+        "S": 75.6
+      },
+      {
+        "enterpriseId": "E008",
+        "month": "2025-05",
+        "S1": 78,
+        "S2": 77,
+        "S3": 72,
+        "S4": 80,
+        "S": 76.6
+      },
+      {
+        "enterpriseId": "E008",
+        "month": "2025-06",
+        "S1": 79,
+        "S2": 78,
+        "S3": 73,
+        "S4": 81,
+        "S": 77.6
+      },
+      {
+        "enterpriseId": "E008",
+        "month": "2025-07",
+        "S1": 80,
+        "S2": 79,
+        "S3": 74,
+        "S4": 82,
+        "S": 78.6
+      },
+      {
+        "enterpriseId": "E008",
+        "month": "2025-08",
+        "S1": 80,
+        "S2": 79,
+        "S3": 74,
+        "S4": 82,
+        "S": 78.6
+      },
+      {
+        "enterpriseId": "E009",
+        "month": "2025-03",
+        "S1": 82,
+        "S2": 80,
+        "S3": 76,
+        "S4": 83,
+        "S": 80.1
+      },
+      {
+        "enterpriseId": "E009",
+        "month": "2025-04",
+        "S1": 83,
+        "S2": 81,
+        "S3": 77,
+        "S4": 84,
+        "S": 81.1
+      },
+      {
+        "enterpriseId": "E009",
+        "month": "2025-05",
+        "S1": 84,
+        "S2": 82,
+        "S3": 78,
+        "S4": 85,
+        "S": 82.1
+      },
+      {
+        "enterpriseId": "E009",
+        "month": "2025-06",
+        "S1": 85,
+        "S2": 83,
+        "S3": 79,
+        "S4": 86,
+        "S": 83.1
+      },
+      {
+        "enterpriseId": "E009",
+        "month": "2025-07",
+        "S1": 86,
+        "S2": 84,
+        "S3": 80,
+        "S4": 87,
+        "S": 84.1
+      },
+      {
+        "enterpriseId": "E009",
+        "month": "2025-08",
+        "S1": 86,
+        "S2": 84,
+        "S3": 80,
+        "S4": 87,
+        "S": 84.1
+      },
+      {
+        "enterpriseId": "E010",
+        "month": "2025-03",
+        "S1": 70,
+        "S2": 68,
+        "S3": 64,
+        "S4": 66,
+        "S": 67.6
+      },
+      {
+        "enterpriseId": "E010",
+        "month": "2025-04",
+        "S1": 71,
+        "S2": 69,
+        "S3": 65,
+        "S4": 67,
+        "S": 68.6
+      },
+      {
+        "enterpriseId": "E010",
+        "month": "2025-05",
+        "S1": 72,
+        "S2": 70,
+        "S3": 66,
+        "S4": 68,
+        "S": 69.6
+      },
+      {
+        "enterpriseId": "E010",
+        "month": "2025-06",
+        "S1": 73,
+        "S2": 71,
+        "S3": 67,
+        "S4": 69,
+        "S": 70.6
+      },
+      {
+        "enterpriseId": "E010",
+        "month": "2025-07",
+        "S1": 74,
+        "S2": 72,
+        "S3": 68,
+        "S4": 70,
+        "S": 71.6
+      },
+      {
+        "enterpriseId": "E010",
+        "month": "2025-08",
+        "S1": 74,
+        "S2": 72,
+        "S3": 68,
+        "S4": 70,
+        "S": 71.6
+      }
+    ],
+    "limits": [
+      {
+        "enterpriseId": "E001",
+        "industry": "manufacturing",
+        "R": 480000,
+        "K": 0.3,
+        "C": 1.0,
+        "D": 18000,
+        "L": 126000.0,
+        "status": "APPROVED"
+      },
+      {
+        "enterpriseId": "E002",
+        "industry": "manufacturing",
+        "R": 430000,
+        "K": 0.3,
+        "C": 1.0,
+        "D": 22000,
+        "L": 107000.0,
+        "status": "APPROVED"
+      },
+      {
+        "enterpriseId": "E003",
+        "industry": "logistics",
+        "R": 180000,
+        "K": 0.25,
+        "C": 1.0,
+        "D": 12000,
+        "L": 33000.0,
+        "status": "APPROVED"
+      },
+      {
+        "enterpriseId": "E004",
+        "industry": "retail",
+        "R": 150000,
+        "K": 0.2,
+        "C": 0.8,
+        "D": 8000,
+        "L": 16000.0,
+        "status": "APPROVED"
+      },
+      {
+        "enterpriseId": "E005",
+        "industry": "manufacturing",
+        "R": 220000,
+        "K": 0.3,
+        "C": 1.0,
+        "D": 14000,
+        "L": 52000.0,
+        "status": "APPROVED"
+      },
+      {
+        "enterpriseId": "E006",
+        "industry": "manufacturing",
+        "R": 240000,
+        "K": 0.3,
+        "C": 1.0,
+        "D": 16000,
+        "L": 56000.0,
+        "status": "APPROVED"
+      },
+      {
+        "enterpriseId": "E007",
+        "industry": "it",
+        "R": 200000,
+        "K": 0.35,
+        "C": 1.0,
+        "D": 10000,
+        "L": 60000.0,
+        "status": "APPROVED"
+      },
+      {
+        "enterpriseId": "E008",
+        "industry": "logistics",
+        "R": 160000,
+        "K": 0.25,
+        "C": 0.8,
+        "D": 9000,
+        "L": 23000.0,
+        "status": "APPROVED"
+      },
+      {
+        "enterpriseId": "E009",
+        "industry": "manufacturing",
+        "R": 210000,
+        "K": 0.3,
+        "C": 1.0,
+        "D": 11000,
+        "L": 52000.0,
+        "status": "APPROVED"
+      },
+      {
+        "enterpriseId": "E010",
+        "industry": "retail",
+        "R": 140000,
+        "K": 0.2,
+        "C": 0.8,
+        "D": 7000,
+        "L": 15400.0,
+        "status": "APPROVED"
+      }
+    ],
+    "kpi": {
+      "cycleCompression": {
+        "traditional": 18,
+        "optimized": 3,
+        "improvement": 0.83
+      },
+      "tPlusOneCoverage": {
+        "target": 0.7,
+        "current": 0.72
+      },
+      "badDebtRate": {
+        "baseline": 0.031,
+        "current": 0.008
+      },
+      "fraudDetectionAccuracy": {
+        "target": 0.98,
+        "current": 0.981
+      }
+    },
+    "financeCycle": [
+      {
+        "quarter": "2024Q4",
+        "traditional": 18,
+        "blockchain": 7
+      },
+      {
+        "quarter": "2025Q1",
+        "traditional": 16,
+        "blockchain": 5
+      },
+      {
+        "quarter": "2025Q2",
+        "traditional": 15,
+        "blockchain": 4
+      },
+      {
+        "quarter": "2025Q3",
+        "traditional": 14,
+        "blockchain": 3
+      }
+    ],
+    "costStructure": {
+      "categories": [
+        "人工审核",
+        "纸质单据",
+        "对账沟通",
+        "资金占压成本"
+      ],
+      "before": [
+        100,
+        45,
+        65,
+        120
+      ],
+      "after": [
+        40,
+        5,
+        20,
+        70
+      ]
+    },
+    "redundantElimination": {
+      "stages": [
+        "申请",
+        "审批",
+        "放款",
+        "回款"
+      ],
+      "baseline": [
+        0.35,
+        0.4,
+        0.45,
+        0.3
+      ],
+      "optimized": [
+        0.85,
+        0.88,
+        0.9,
+        0.82
+      ]
+    },
+    "cycleDays": {
+      "traditional": 18,
+      "current": 3
+    },
+    "tPlusOneRate": 0.7,
+    "badDebtRate": 0.008,
+    "fraudDetectAcc": 0.98,
+    "crossBorderCycle": {
+      "traditional": 50,
+      "current": 10
+    }
+  },
+  "downloadableCharts": [
+    "chart-kpi-overview",
+    "chart-advantage",
+    "chart-objective-gauges",
+    "chart-flow-timeline",
+    "chart-cost-compare",
+    "chart-risk-matrix",
+    "chart-regulatory",
+    "chart-outcome-projection"
+  ],
+  "printConfig": {
+    "background": "#FFFFFF",
+    "removeShadows": true,
+    "keepSections": [
+      "overview",
+      "background",
+      "objectives",
+      "technology",
+      "business",
+      "risk",
+      "outcomes"
+    ],
+    "notes": "打印模式自动切换白底、移除动效，仅保留关键图表与表格。"
+  }
+}

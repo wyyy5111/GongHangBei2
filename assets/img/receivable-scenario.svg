@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="380" viewBox="0 0 760 380">
+  <defs>
+    <linearGradient id="grad-stage" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1F6FEB" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0B1F3B" stop-opacity="0.8"/>
+    </linearGradient>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#1F6FEB" />
+    </marker>
+  </defs>
+  <rect width="760" height="380" rx="28" fill="#0B1F3B"/>
+  <g transform="translate(40,52)" font-family="Segoe UI, sans-serif">
+    <g fill="#BFD4FF" font-size="16">
+      <text x="0" y="-12">应收账款融资全流程示意</text>
+    </g>
+    <g transform="translate(0,24)">
+      <g fill="#162B50" stroke="#1F6FEB" stroke-width="1.2">
+        <rect x="0" y="0" width="120" height="64" rx="14" fill="url(#grad-stage)"/>
+        <rect x="140" y="0" width="120" height="64" rx="14" fill="url(#grad-stage)"/>
+        <rect x="280" y="0" width="140" height="64" rx="14" fill="url(#grad-stage)"/>
+        <rect x="440" y="0" width="120" height="64" rx="14" fill="url(#grad-stage)"/>
+        <rect x="580" y="0" width="120" height="64" rx="14" fill="url(#grad-stage)"/>
+      </g>
+      <g fill="#F5F7FF" font-size="14" font-weight="600">
+        <text x="24" y="30">核心企业</text>
+        <text x="158" y="30">供应商</text>
+        <text x="300" y="30">数字债权凭证</text>
+        <text x="462" y="30">合作银行</text>
+        <text x="604" y="30">结清节点</text>
+      </g>
+      <!-- 连线加箭头，标签居中到横线上，避免与方框重叠 -->
+      <g stroke="#1FBF9A" stroke-width="2" stroke-linecap="round" fill="none">
+        <path d="M120 32 C132 32 136 32 140 32" marker-end="url(#arrow-blue)"/>
+        <path d="M260 32 C272 32 276 32 280 32" marker-end="url(#arrow-blue)"/>
+        <path d="M420 32 C432 32 436 32 440 32" marker-end="url(#arrow-blue)"/>
+        <path d="M560 32 C572 32 576 32 580 32" marker-end="url(#arrow-blue)"/>
+      </g>
+      <g font-size="12" text-anchor="middle">
+        <g transform="translate(130,28)">
+          <rect x="-22" y="-12" width="44" height="20" rx="10" fill="rgba(12,28,52,0.9)" stroke="#1FBF9A" stroke-width="1"/>
+          <text fill="#1FBF9A" y="3">确权</text>
+        </g>
+        <g transform="translate(270,28)">
+          <rect x="-22" y="-12" width="44" height="20" rx="10" fill="rgba(12,28,52,0.9)" stroke="#1FBF9A" stroke-width="1"/>
+          <text fill="#1FBF9A" y="3">拆分</text>
+        </g>
+        <g transform="translate(430,28)">
+          <rect x="-22" y="-12" width="44" height="20" rx="10" fill="rgba(12,28,52,0.9)" stroke="#1FBF9A" stroke-width="1"/>
+          <text fill="#1FBF9A" y="3">授信</text>
+        </g>
+        <g transform="translate(570,28)">
+          <rect x="-22" y="-12" width="44" height="20" rx="10" fill="rgba(12,28,52,0.9)" stroke="#1FBF9A" stroke-width="1"/>
+          <text fill="#1FBF9A" y="3">还款</text>
+        </g>
+      </g>
+      <!-- 每个方框下的说明文字居中对齐，更规整 -->
+      <g fill="#8BA3C7" font-size="12" text-anchor="middle">
+        <text x="60" y="52">ERP 订单与合同</text>
+        <text x="200" y="52">发票验真与确权</text>
+        <text x="350" y="52">tokenId/面值/到期日</text>
+        <text x="500" y="52">自动授信与放款</text>
+        <text x="640" y="52">全链追溯</text>
+      </g>
+    </g>
+
+    <g transform="translate(0,156)">
+      <g fill="#1FBF9A" font-size="12">
+        <text x="0" y="0">链上字段</text>
+      </g>
+      <g fill="#10254A" stroke="#1F6FEB" stroke-width="1">
+        <rect x="0" y="14" width="220" height="104" rx="14" fill="rgba(26,54,94,0.55)"/>
+        <rect x="240" y="14" width="220" height="104" rx="14" fill="rgba(26,54,94,0.55)"/>
+        <rect x="480" y="14" width="220" height="104" rx="14" fill="rgba(26,54,94,0.55)"/>
+      </g>
+      <g fill="#BFD4FF" font-size="13">
+        <text x="16" y="44">• 订单哈希 / SKU 列表</text>
+        <text x="16" y="66">• 物流签收凭证</text>
+        <text x="16" y="88">• 合同附件指纹</text>
+
+        <text x="256" y="44">• tokenId / 面值 / 到期</text>
+        <text x="256" y="66">• 债权拆分比例</text>
+        <text x="256" y="88">• 白名单供应商标识</text>
+
+        <text x="496" y="44">• 授信额度 L</text>
+        <text x="496" y="66">• 放款流水哈希</text>
+        <text x="496" y="88">• 结清状态与时间戳</text>
+      </g>
+    </g>
+  </g>
+</svg>

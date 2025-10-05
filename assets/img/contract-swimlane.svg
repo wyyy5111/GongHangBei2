@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 720 420">
+  <rect width="720" height="420" rx="26" fill="#0B1F3B"/>
+  <g font-family="Segoe UI, sans-serif" fill="#F5F7FF">
+    <text x="36" y="44" font-size="18">智能合约执行泳道图</text>
+  </g>
+  <g transform="translate(36,72)">
+    <g fill="#1F6FEB" font-size="13">
+      <text x="0" y="24">申请方</text>
+      <text x="0" y="114">平台合约</text>
+      <text x="0" y="204">合作银行</text>
+      <text x="0" y="294">监管节点</text>
+    </g>
+    <g stroke="#1F6FEB" stroke-width="1">
+      <line x1="70" y1="10" x2="660" y2="10" stroke-dasharray="6 6"/>
+      <line x1="70" y1="100" x2="660" y2="100" stroke-dasharray="6 6"/>
+      <line x1="70" y1="190" x2="660" y2="190" stroke-dasharray="6 6"/>
+      <line x1="70" y1="280" x2="660" y2="280" stroke-dasharray="6 6"/>
+      <!-- 由于整体高度增加，保留原坐标，避免裁切 -->
+    </g>
+    <g>
+      <rect x="96" y="-10" width="150" height="40" rx="12" fill="rgba(31,111,235,0.3)" stroke="#1F6FEB" stroke-width="1"/>
+      <text x="104" y="16" fill="#BFD4FF" font-size="12">提交融资申请</text>
+
+      <rect x="280" y="70" width="170" height="50" rx="12" fill="rgba(31,191,154,0.28)" stroke="#1FBF9A" stroke-width="1"/>
+      <text x="292" y="98" fill="#BFD4FF" font-size="12">计算 S &amp; L • 校验白名单</text>
+
+      <rect x="480" y="160" width="170" height="50" rx="12" fill="rgba(224,185,91,0.22)" stroke="#E0B95B" stroke-width="1"/>
+      <text x="492" y="188" fill="#BFD4FF" font-size="12">自动放款 • 资金流向存证</text>
+
+      <rect x="320" y="250" width="200" height="50" rx="12" fill="rgba(11,31,59,0.55)" stroke="#1F6FEB" stroke-width="1"/>
+      <text x="332" y="278" fill="#BFD4FF" font-size="12">监管节点实时获取执行日志</text>
+    </g>
+    <g stroke="#1FBF9A" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)">
+      <path d="M246 10 C260 40 260 70 272 90"/>
+      <path d="M450 120 C462 150 468 170 478 180"/>
+      <path d="M560 210 C560 238 520 250 520 250"/>
+    </g>
+    <defs>
+      <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L8,4 L0,8 z" fill="#1FBF9A"/>
+      </marker>
+    </defs>
+  </g>
+</svg>

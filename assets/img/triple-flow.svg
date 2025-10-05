@@ -1,0 +1,46 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="720" height="260" viewBox="0 0 720 260">
+  <defs>
+    <linearGradient id="grad-info" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1F6FEB" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#1FBF9A" stop-opacity="0.45"/>
+    </linearGradient>
+    <linearGradient id="grad-logistics" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1FBF9A" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#E0B95B" stop-opacity="0.45"/>
+    </linearGradient>
+    <linearGradient id="grad-finance" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1F6FEB" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#E0B95B" stop-opacity="0.55"/>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="260" rx="28" fill="#0B1F3B"/>
+  <g font-family="Segoe UI, sans-serif" font-size="18" fill="#F5F7FF">
+    <text x="70" y="52">信息流</text>
+    <text x="70" y="126">物流</text>
+    <text x="70" y="200">资金流</text>
+  </g>
+  <g stroke-linecap="round" stroke-width="26" fill="none">
+    <path d="M180 40 C280 42 320 84 420 88 S580 78 640 90" stroke="url(#grad-info)"/>
+    <path d="M180 114 C260 124 320 150 420 150 S580 132 640 140" stroke="url(#grad-logistics)"/>
+    <path d="M180 188 C280 198 320 230 420 224 S600 210 640 208" stroke="url(#grad-finance)"/>
+  </g>
+  <g font-family="Segoe UI, sans-serif" font-size="14" fill="#BFD4FF">
+    <text x="210" y="28">核心企业 ERP</text>
+    <text x="320" y="70">供应商系统</text>
+    <text x="500" y="58">监管节点</text>
+
+    <text x="210" y="102">IoT 追踪</text>
+    <text x="320" y="142">冷链监测</text>
+    <text x="520" y="130">电子签收</text>
+
+    <text x="210" y="176">额度池</text>
+    <text x="330" y="218">白名单授信</text>
+    <text x="520" y="206">自动放款</text>
+  </g>
+  <circle cx="640" cy="86" r="22" fill="#10254A" stroke="#1FBF9A" stroke-width="2"/>
+  <circle cx="640" cy="140" r="22" fill="#10254A" stroke="#E0B95B" stroke-width="2"/>
+  <circle cx="640" cy="210" r="22" fill="#10254A" stroke="#1F6FEB" stroke-width="2"/>
+  <text x="630" y="92" fill="#E0B95B" font-size="16">信</text>
+  <text x="630" y="146" fill="#1FBF9A" font-size="16">流</text>
+  <text x="630" y="216" fill="#1F6FEB" font-size="16">合</text>
+</svg>
