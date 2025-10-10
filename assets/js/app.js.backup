@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 const I18N = {
   zh: {
@@ -1578,11 +1578,17 @@ const UIBuilder = (() => {
         fontSize: 22,
         fontWeight: '700',
         fontFamily: '-apple-system, "Segoe UI", "Microsoft YaHei", sans-serif',
-        textBorderColor: 'rgba(11, 31, 59, 0.8)',
-        textBorderWidth: 2,
+        textBorderColor: 'rgba(0, 0, 0, 0.9)',
+        textBorderWidth: 3,  // 加粗描边，增强可读性
         formatter: (params) => {
           const value = params.value[2];
-          return value.toFixed(3);
+          const riskType = categories[params.value[0]];
+          let icon = '⚠️';
+          if (value >= 0.14) icon = '🔴';
+          else if (value >= 0.10) icon = '�';
+          else if (value >= 0.05) icon = '🟢';
+          else icon = '🔵';
+          return `${icon}\n${value.toFixed(3)}`;
         }
       },
       emphasis: { 
@@ -1972,4 +1978,3 @@ const App = (() => {
 })();
 
 document.addEventListener('DOMContentLoaded', () => App.init());
-
