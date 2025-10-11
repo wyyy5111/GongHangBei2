@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 const I18N = {
   zh: {
@@ -1111,9 +1111,9 @@ const UIBuilder = (() => {
     backgroundColor: 'transparent',
     tooltip: { trigger: 'axis' },
     legend: { data: ['基准', '目标'], textStyle: { color: '#BFD4FF' } },
-    grid: { left: 60, right: 30, top: 50, bottom: 40 },
+    grid: { left: 70, right: 60, top: 50, bottom: 60 },
     textStyle: { color: '#BFD4FF' },
-    xAxis: { type: 'category', data: categories, axisLine: { lineStyle: { color: '#1F6FEB' } } },
+    xAxis: { type: 'category', data: categories, axisLine: { lineStyle: { color: '#1F6FEB' } }, axisLabel: { color: '#BFD4FF', fontSize: 12 } },
     yAxis: { type: 'value', axisLine: { lineStyle: { color: '#1F6FEB' } }, splitLine: { lineStyle: { color: 'rgba(31,111,235,0.2)' } } },
     series: [
       {
@@ -1121,6 +1121,7 @@ const UIBuilder = (() => {
         type: 'bar',
         data: averagesBefore,
         itemStyle: { color: 'rgba(31,111,235,0.6)' },
+        barMaxWidth: 40,
         // 让非常小的数值也能有可见的柱形高度
         barMinHeight: 6,
         label: {
@@ -1138,6 +1139,7 @@ const UIBuilder = (() => {
         type: 'bar',
         data: averagesAfter,
         itemStyle: { color: 'rgba(31,191,154,0.75)' },
+        barMaxWidth: 40,
         barMinHeight: 6,
         label: {
           show: true,

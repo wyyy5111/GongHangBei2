@@ -273,10 +273,13 @@
         "after": 0.008
       },
       "compositeCost": {
-        "before": 0.068,
+        "before": 0.26,
         "after": 0.05
       },
-      "materialCostSaving": 0.15
+      "materialCostSaving": {
+        "before": 0.12,
+        "after": 0.15
+      }
     },
     "midTerm": {
       "tPlusOneCoverage": {
